@@ -11,7 +11,7 @@ export default function AppLayout() {
       <Stack.Screen name="budgets" options={{ title: 'Presupuestos' }} />
       <Stack.Screen name="reports" options={{ title: 'Reportes' }} />
       <Stack.Screen name="profile" options={{ title: 'Perfil y configuración' }} />
-      <Stack.Screen name="dev-components" options={{ title: "Componentes (dev)" }} />
+      <Stack.Screen name="dev-components" options={{ title: "Catálogo de componentes" }} />
     </Stack>
   );
 }
