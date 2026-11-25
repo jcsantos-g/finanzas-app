@@ -13,7 +13,7 @@ Estados: ⬜ pendiente · 🟨 en progreso · ✅ terminado
 | RF-04 | Dashboard (menú de tarjetas + dinero disponible; decisión del equipo) | Integrante 1 | `src/features/dashboard` | ✅ |
 | — | Componentes compartidos y categorías (base para RF-02/03/05/07) | Integrante 1 | `src/components/ui`, `src/features/categories` | ✅ (ver `docs/components.md`) |
 | RF-05 | Movimientos recurrentes | Integrante 3 | `src/features/recurring` | ⬜ |
-| RF-06 | Dinero disponible | Integrante 1 | `src/features/balance`, `0003_dinero_disponible.sql` | 🟨 implementado; falta probar con movimientos reales |
+| RF-06 | Dinero disponible | Integrante 1 | `src/features/balance`, `0003_dinero_disponible.sql` | ✅ probado por el Integrante 1 (T-16) |
 | RF-07 | Presupuestos | Integrante 3 | `src/features/budgets` | ⬜ |
 | RF-08 | Reportes básicos | Integrante 4 | `src/features/reports` | ⬜ |
 | RF-09 | Escaneo de tickets con IA (adicional) | Equipo | por definir | ⬜ |
@@ -31,7 +31,7 @@ Estados: ⬜ pendiente · 🟨 en progreso · ✅ terminado
 
 - [x] Registrarse e iniciar sesión
 - [ ] Registrar, editar, consultar y eliminar ingresos y gastos
-- [ ] Dinero disponible correcto
+- [x] Dinero disponible correcto (con datos de prueba; repetir al terminar ingresos y gastos)
 - [ ] Programar, confirmar y omitir recurrentes
 - [ ] Pendientes no afectan cálculos
 - [ ] Presupuestos y su consumo

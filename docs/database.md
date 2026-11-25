@@ -3,6 +3,10 @@
 El esquema completo está en [`supabase/migrations/0001_init.sql`](../supabase/migrations/0001_init.sql). Todo está en **español** (tablas, columnas y valores) y el propio script explica cada elemento con comentarios, además de dejar una descripción guardada en la base (`COMMENT ON`) que se ve en el panel de Supabase.
 Este documento resume **qué hace y por qué**, para poder defenderlo en la presentación.
 
+## Estado
+
+La base del equipo ya está creada en Supabase (la configuró el Integrante 1, que además probó el registro, el aislamiento entre dos cuentas y el dinero disponible). **Los demás integrantes no deben ejecutar los scripts sobre la base compartida.**
+
 ## Migraciones
 
 | Archivo | Qué hace |
@@ -100,5 +104,4 @@ erDiagram
 ## Pendiente (a coordinar con el Integrante 3)
 
 - La confirmación/omisión de recurrentes puede implementarse en el cliente (insertar el movimiento y actualizar `proxima_fecha`) o como función SQL (RPC) para que sea atómica. Si se hace en el cliente, la restricción única ya protege contra duplicados, pero un fallo entre los dos pasos dejaría la fecha sin avanzar.
-- Este SQL no se pudo ejecutar contra un PostgreSQL real durante la preparación del proyecto: **probarlo en un proyecto Supabase nuevo y corregir lo que falle.**
 - Un presupuesto por categoría debería apuntar solo a categorías de tipo `gasto`; hoy solo lo valida la app.

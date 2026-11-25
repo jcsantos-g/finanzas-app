@@ -33,7 +33,7 @@ Ejecutar en un dispositivo real o emulador. Marcar con la fecha y el nombre de q
 | T-13 | Presupuesto | Gastar sobre un presupuesto por categoría | Muestra usado, restante y excedido | ⬜ | |
 | T-14 | Reportes | Cambiar de mes | Totales y gráfico corresponden al mes | ⬜ | |
 | T-15 | **Aislamiento (RLS)** | Con la cuenta A crear datos; entrar con la cuenta B | B no ve nada de A | ✅ | Juan Carlos Santos / 2026-11-25 |
-| T-16 | Dinero disponible | Registrar un ingreso y un gasto; volver al Dashboard | Muestra ingresos menos gastos; los recurrentes pendientes no cuentan | ⬜ | |
+| T-16 | Dinero disponible | Registrar un ingreso y un gasto; volver al Dashboard | Muestra ingresos menos gastos; los recurrentes pendientes no cuentan | ✅ | Juan Carlos Santos / 2026-11-25 |
 
 ## Registro de errores
 
