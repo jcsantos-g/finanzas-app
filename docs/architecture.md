@@ -38,8 +38,8 @@ Los paréntesis `(auth)` y `(app)` son *grupos de rutas*: organizan archivos sin
 ## Flujo de un dato (ejemplo: listar gastos)
 
 1. `src/app/(app)/expenses.tsx` renderiza la pantalla del módulo.
-2. La pantalla llama a `listTransactions({ type: 'expense' })` de `features/transactions/service.ts`.
-3. El servicio usa el cliente de `src/lib/supabase.ts` y consulta la tabla `transactions`.
+2. La pantalla llama a `listTransactions({ tipo: 'gasto' })` de `features/transactions/service.ts`.
+3. El servicio usa el cliente de `src/lib/supabase.ts` y consulta la tabla `movimientos`.
 4. Supabase aplica **RLS**: solo devuelve filas del usuario autenticado.
 5. La pantalla muestra montos con `formatCurrency` y fechas con `formatDate`.
 

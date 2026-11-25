@@ -1,23 +1,23 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import type { Category, MovementType } from '@/types/database';
+import type { Categoria, TipoMovimiento } from '@/types/database';
 
 import { listCategories } from './service';
 
-type State = { categories: Category[]; loading: boolean; error: string | null };
+type State = { categories: Categoria[]; loading: boolean; error: string | null };
 
 /**
  * Carga las categorías de un tipo. Uso típico:
- *   const { categories, loading, error, reload } = useCategories('expense');
+ *   const { categories, loading, error, reload } = useCategories('gasto');
  *   <CategoryPicker categories={categories} value={id} onChange={setId} />
  */
-export function useCategories(type: MovementType) {
+export function useCategories(tipo: TipoMovimiento) {
   const [state, setState] = useState<State>({ categories: [], loading: true, error: null });
 
   const reload = useCallback(async () => {
     setState((s) => ({ ...s, loading: true, error: null }));
     try {
-      const categories = await listCategories(type);
+      const categories = await listCategories(tipo);
       setState({ categories, loading: false, error: null });
     } catch (e) {
       setState({
@@ -26,7 +26,7 @@ export function useCategories(type: MovementType) {
         error: e instanceof Error ? e.message : 'No se pudieron cargar las categorías',
       });
     }
-  }, [type]);
+  }, [tipo]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- carga inicial de datos al montar

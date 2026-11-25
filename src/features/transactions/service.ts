@@ -1,21 +1,21 @@
 import { supabase } from '@/lib/supabase';
-import type { MovementType, Transaction } from '@/types/database';
+import type { Movimiento, TipoMovimiento } from '@/types/database';
 
 /**
  * Ejemplo del patrón de servicios: todo acceso a datos vive en service.ts,
  * las pantallas nunca llaman a Supabase directamente.
- * Integrante 2: amplía este archivo (crear, editar, eliminar, categorías).
+ * Integrante 2: amplía este archivo (crear, editar, eliminar).
  */
 
 export async function listTransactions(params: {
-  type?: MovementType;
-  from?: string; // YYYY-MM-DD
-  to?: string; // YYYY-MM-DD
-}): Promise<Transaction[]> {
-  let query = supabase.from('transactions').select('*').order('occurred_at', { ascending: false });
-  if (params.type) query = query.eq('type', params.type);
-  if (params.from) query = query.gte('occurred_at', params.from);
-  if (params.to) query = query.lte('occurred_at', params.to);
+  tipo?: TipoMovimiento;
+  desde?: string; // YYYY-MM-DD
+  hasta?: string; // YYYY-MM-DD
+}): Promise<Movimiento[]> {
+  let query = supabase.from('movimientos').select('*').order('fecha', { ascending: false });
+  if (params.tipo) query = query.eq('tipo', params.tipo);
+  if (params.desde) query = query.gte('fecha', params.desde);
+  if (params.hasta) query = query.lte('fecha', params.hasta);
 
   const { data, error } = await query;
   if (error) throw error;

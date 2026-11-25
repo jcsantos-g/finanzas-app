@@ -1,102 +1,107 @@
 /**
- * Tipos de la base de datos (provisionales, escritos a mano).
- * Cuando exista la base en Supabase, regenerar con:
+ * Tipos de la base de datos (provisionales, escritos a mano; reflejan supabase/migrations/0001_init.sql).
+ * Los nombres de tablas, columnas y valores están en español, igual que en la base de datos.
+ * Cuando exista la base en Supabase, se pueden regenerar con:
  *   npx supabase gen types typescript --project-id <ID> > src/types/database.ts
  * Dueño: Integrante 1. No modificar sin coordinar.
  */
 
-export type MovementType = 'income' | 'expense';
-export type TransactionSource = 'manual' | 'recurring' | 'ai';
-export type Frequency = 'weekly' | 'biweekly' | 'monthly';
+export type TipoMovimiento = 'ingreso' | 'gasto';
+export type OrigenMovimiento = 'manual' | 'recurrente' | 'ia';
+export type Frecuencia = 'semanal' | 'quincenal' | 'mensual';
 
-export interface Category {
+/** Tabla `categorias`. */
+export interface Categoria {
   id: string;
-  user_id: string;
-  name: string;
-  type: MovementType;
-  icon: string | null;
+  usuario_id: string;
+  nombre: string;
+  tipo: TipoMovimiento;
+  icono: string | null;
 }
 
-export interface Transaction {
+/** Tabla `movimientos`: ingresos y gastos que realmente ocurrieron. */
+export interface Movimiento {
   id: string;
-  user_id: string;
-  category_id: string;
-  type: MovementType;
-  amount: number;
-  occurred_at: string; // YYYY-MM-DD
-  description: string | null;
-  merchant: string | null;
-  source: TransactionSource;
-  recurring_schedule_id: string | null;
-  scheduled_date: string | null; // YYYY-MM-DD
-  created_at: string;
-  updated_at: string;
+  usuario_id: string;
+  categoria_id: string;
+  tipo: TipoMovimiento;
+  monto: number;
+  fecha: string; // YYYY-MM-DD
+  descripcion: string | null;
+  establecimiento: string | null;
+  origen: OrigenMovimiento;
+  movimiento_recurrente_id: string | null;
+  fecha_programada: string | null; // YYYY-MM-DD
+  creado_en: string;
+  actualizado_en: string;
 }
 
-export interface RecurringSchedule {
+/** Tabla `movimientos_recurrentes`: programaciones que se repiten. */
+export interface MovimientoRecurrente {
   id: string;
-  user_id: string;
-  category_id: string;
-  type: MovementType;
-  expected_amount: number;
-  frequency: Frequency;
-  start_date: string; // YYYY-MM-DD
-  next_due_date: string; // YYYY-MM-DD
-  description: string | null;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
+  usuario_id: string;
+  categoria_id: string;
+  tipo: TipoMovimiento;
+  monto_esperado: number;
+  frecuencia: Frecuencia;
+  fecha_inicio: string; // YYYY-MM-DD
+  proxima_fecha: string; // YYYY-MM-DD
+  descripcion: string | null;
+  activo: boolean;
+  creado_en: string;
+  actualizado_en: string;
 }
 
-export interface Budget {
+/** Tabla `presupuestos`. `categoria_id` es null para el presupuesto general del mes. */
+export interface Presupuesto {
   id: string;
-  user_id: string;
-  category_id: string | null; // null = presupuesto general
-  amount_limit: number;
-  period_month: string; // YYYY-MM-01
-  created_at: string;
+  usuario_id: string;
+  categoria_id: string | null;
+  monto_limite: number;
+  mes: string; // YYYY-MM-01
+  creado_en: string;
 }
 
-type Insert<T, Auto extends keyof T> = Omit<T, Auto> & Partial<Pick<T, Auto>>;
+type Insertar<T, Opcionales extends keyof T> = Omit<T, Opcionales> & Partial<Pick<T, Opcionales>>;
 
 export interface Database {
   public: {
     Tables: {
-      categories: {
-        Row: Category;
-        Insert: Insert<Category, 'id' | 'icon'>;
-        Update: Partial<Category>;
+      categorias: {
+        Row: Categoria;
+        Insert: Insertar<Categoria, 'id' | 'icono'>;
+        Update: Partial<Categoria>;
         Relationships: [];
       };
-      transactions: {
-        Row: Transaction;
-        Insert: Insert<
-          Transaction,
+      movimientos: {
+        Row: Movimiento;
+        Insert: Insertar<
+          Movimiento,
           | 'id'
-          | 'description'
-          | 'merchant'
-          | 'source'
-          | 'recurring_schedule_id'
-          | 'scheduled_date'
-          | 'created_at'
-          | 'updated_at'
+          | 'descripcion'
+          | 'establecimiento'
+          | 'origen'
+          | 'movimiento_recurrente_id'
+          | 'fecha_programada'
+          | 'creado_en'
+          | 'actualizado_en'
         >;
-        Update: Partial<Transaction>;
+        Update: Partial<Movimiento>;
         Relationships: [];
       };
-      recurring_schedules: {
-        Row: RecurringSchedule;
-        Insert: Insert<
-          RecurringSchedule,
-          'id' | 'description' | 'is_active' | 'created_at' | 'updated_at'
+      movimientos_recurrentes: {
+        Row: MovimientoRecurrente;
+        Insert: Insertar<
+          MovimientoRecurrente,
+          'id' | 'descripcion' | 'activo' | 'creado_en' | 'actualizado_en'
         >;
-        Update: Partial<RecurringSchedule>;
+        Update: Partial<MovimientoRecurrente>;
         Relationships: [];
       };
-      budgets: {
-        Row: Budget;
-        Insert: Insert<Budget, 'id' | 'created_at'>;
-        Update: Partial<Budget>;
+      presupuestos: {
+        Row: Presupuesto;
+        Insert: Insertar<Presupuesto, 'id' | 'creado_en'>;
+        Update: Partial<Presupuesto>;
         Relationships: [];
       };
     };
