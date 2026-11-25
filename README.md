@@ -14,7 +14,9 @@ npx expo start
 
 Desde la terminal de Expo puedes abrir la app en un emulador de Android, un simulador de iOS o con [Expo Go](https://expo.dev/go) en tu teléfono.
 
-La base de datos se crea ejecutando [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql) en el SQL Editor de Supabase (ver [docs/database.md](docs/database.md)).
+¿Eres parte del equipo? Empieza por la [guía de incorporación](docs/onboarding.md).
+
+Para crear una base nueva desde cero se ejecuta [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql) en el SQL Editor de Supabase (ver [docs/database.md](docs/database.md)).
 
 ## Comandos
 
@@ -47,6 +49,7 @@ docs/                    Documentación del proyecto
 | [AGENTS.md](AGENTS.md) | Reglas específicas de Expo para herramientas de IA |
 | [docs/architecture.md](docs/architecture.md) | Capas, flujo de datos y decisiones técnicas |
 | [docs/database.md](docs/database.md) | Modelo de datos, RLS y decisiones de diseño |
+| [docs/onboarding.md](docs/onboarding.md) | **Guía de incorporación**: instalar, ejecutar y abrir tu primer PR |
 | [docs/components.md](docs/components.md) | Catálogo de componentes compartidos |
 | [docs/git-workflow.md](docs/git-workflow.md) | Ramas, commits y Pull Requests |
 | [docs/traceability.md](docs/traceability.md) | Requerimientos → módulo → estado |
@@ -55,9 +58,9 @@ docs/                    Documentación del proyecto
 
 ## Equipo
 
-| Integrante | Módulo |
-|---|---|
-| 1 | Arquitectura, autenticación, Dashboard y Perfil |
-| 2 | Ingresos y gastos |
-| 3 | Movimientos recurrentes y presupuestos |
-| 4 | Reportes y pruebas |
+| Integrante | Nombre | GitHub | Módulo |
+|---|---|---|---|
+| 1 | Juan Carlos Santos | `jcsantos-g` | Arquitectura, autenticación, Dashboard y Perfil |
+| 2 | Guillermo Calderón | `gactony` | Ingresos y gastos |
+| 3 | Edgar Mendoza | por confirmar | Movimientos recurrentes y presupuestos |
+| 4 | Nelson Ortega | `VoNoStar` | Reportes y pruebas |

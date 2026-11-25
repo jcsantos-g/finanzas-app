@@ -10,19 +10,19 @@ main      ← versión estable (lo que se presenta)
        └─ feature/reports             (Integrante 4)
 ```
 
-## Configuración inicial (Integrante 1, una sola vez)
+## Estado actual del repositorio
 
-```bash
-git remote add origin <URL_DEL_REPO>
-git add . && git commit -m "chore: estructura inicial del proyecto"
-git push -u origin main
-git checkout -b develop && git push -u origin develop
-```
+Repositorio: <https://github.com/jcsantos-g/finanzas-app> (público).
 
-En GitHub → Settings → Branches, crea reglas para `main` y `develop`:
-*Require a pull request before merging*, *Require status checks (CI)* y *Require review from Code Owners*.
+- Ramas `main` y `develop` creadas y **protegidas**: exigen Pull Request, 1 aprobación y que la CI (`check`) pase. No se permiten pushes forzados ni borrar las ramas.
+- El dueño del repositorio puede saltarse la aprobación (necesario porque nadie puede aprobar su propio PR).
+- `.github/CODEOWNERS` asigna cada carpeta a su responsable. Las carpetas del Integrante 3 las revisa el Integrante 1 hasta que aquel tenga acceso al repositorio.
+- Integrantes 2 y 4 invitados como colaboradores con permiso de escritura.
+- Ramas `feature/transactions`, `feature/recurring-budgets` y `feature/reports` creadas. Antes de empezar a trabajar en una, ejecutar `git merge origin/develop`.
+- Hay un Issue por requerimiento en <https://github.com/jcsantos-g/finanzas-app/issues>. Cada PR indica `Closes #<número>`. Como los PR van a `develop`, el Issue se cierra a mano o cuando el cambio llega a `main`.
+- Las versiones de `develop` a `main` se fusionan con **merge commit** (no *squash*), para que las dos ramas no se separen. Ese commit queda solo en `main`, así que en la siguiente versión GitHub puede indicar que `develop` está desactualizada; la fusiona el dueño del repositorio después de comprobar que la CI pasa.
 
-Antes de empezar, reemplaza `@INTEGRANTE1…4` en `.github/CODEOWNERS` por los usuarios reales.
+Pasos para quien arranca desde cero: ver [onboarding.md](onboarding.md).
 
 ## Día a día de cada integrante
 

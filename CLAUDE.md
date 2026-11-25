@@ -16,6 +16,8 @@ src/
   features/
     auth/               # Integrante 1
     dashboard/          # Integrante 1
+    categories/         # Integrante 1 (listCategories, useCategories; compartido por todos)
+    balance/            # Integrante 1 (dinero disponible: BalanceCard, useAvailableBalance)
     transactions/       # Integrante 2
     recurring/          # Integrante 3
     budgets/            # Integrante 3
@@ -35,28 +37,29 @@ supabase/migrations/    # Esquema SQL (dueño: Integrante 1)
 6. **Formato siempre vía utilidades**: montos con `formatCurrency`, fechas con `formatDate`. No formatees a mano.
 7. **Nunca** pongas claves o secretos en el código. Variables `EXPO_PUBLIC_*` solo para la URL y la anon key de Supabase. Las credenciales de IA van solo en Edge Functions.
 8. No agregues dependencias nuevas sin avisar al equipo.
-9. Textos de interfaz en español.
+9. Textos de interfaz en español. La **base de datos y sus tipos** (`src/types/database.ts`) usan nombres en español (`movimientos`, `monto`, `tipo = 'gasto'`); funciones, hooks y componentes del código se nombran en inglés.
 10. No dejes `console.log` ni código comentado en los PR.
 
 ## Modelo de datos (resumen)
 
-Tablas: `categories`, `transactions`, `recurring_schedules`, `budgets`. Todas con `user_id` y RLS.
-- `transactions.type`: `income` | `expense`. `source`: `manual` | `recurring` | `ai`.
-- `recurring_schedules.frequency`: `weekly` | `biweekly` | `monthly`.
-- `budgets.category_id` es `NULL` para el presupuesto general. Un presupuesto general y uno por categoría por mes.
+Tablas (en español): `categorias`, `movimientos`, `movimientos_recurrentes`, `presupuestos`. Todas con `usuario_id` y RLS. Equivalencias con el documento de requerimientos en `docs/database.md`.
+- `movimientos.tipo`: `ingreso` | `gasto`. `origen`: `manual` | `recurrente` | `ia`.
+- `movimientos_recurrentes.frecuencia`: `semanal` | `quincenal` | `mensual`.
+- `presupuestos.categoria_id` es `NULL` para el presupuesto general. Un presupuesto general y uno por categoría por mes.
 - Totales, saldo y porcentajes **se calculan**, no se guardan.
 
 ## Reglas de negocio que el código debe respetar
 
 - **RN-02**: todo monto > 0 (validar en formulario y con `CHECK` en base de datos).
-- **Dinero disponible** = ingresos reales − gastos reales. Solo tabla `transactions`.
+- **Dinero disponible** = ingresos reales − gastos reales. Solo tabla `movimientos`. Ya está implementado en `features/balance` (función SQL `dinero_disponible`): reutilizarlo, no recalcularlo.
+- **Dashboard**: menú de tarjetas + únicamente el dinero disponible (decisión del equipo). Gráficos y estadísticas van en Reportes.
 - **RN-05/RN-11**: los recurrentes pendientes NO afectan saldo, presupuestos ni reportes.
-- **RN-06**: confirmar un recurrente crea una `transaction` (`source = 'recurring'`, con `recurring_schedule_id` y `scheduled_date`) y avanza `next_due_date`.
-- **RN-07**: omitir no crea transacción, solo avanza `next_due_date`.
+- **RN-06**: confirmar un recurrente crea un `movimiento` (`origen = 'recurrente'`, con `movimiento_recurrente_id` y `fecha_programada`) y avanza `proxima_fecha`.
+- **RN-07**: omitir no crea movimiento, solo avanza `proxima_fecha`.
 - **RN-08**: los vencidos siguen pendientes hasta que el usuario actúe.
 - **RN-09**: la siguiente fecha se calcula desde la fecha programada anterior, no desde hoy.
 - **RN-10**: si el día no existe en el mes (ej. 31), usar el último día de ese mes. Usar `addInterval` de `src/lib/dates.ts`; no reimplementar.
-- **Anti-duplicados**: confirmar la misma ocurrencia dos veces no debe crear dos transacciones (restricción única sobre `recurring_schedule_id` + `scheduled_date`).
+- **Anti-duplicados**: confirmar la misma ocurrencia dos veces no debe crear dos movimientos (restricción única sobre `movimiento_recurrente_id` + `fecha_programada`).
 - **RN-12**: presupuestos consideran solo gastos reales del mes.
 - **RN-13**: nada extraído por IA se guarda sin confirmación del usuario. La foto del ticket nunca se almacena.
 - **RN-14**: aislamiento por usuario garantizado por RLS, no solo por filtros en el cliente.

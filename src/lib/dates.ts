@@ -1,4 +1,4 @@
-import type { Frequency } from '@/types/database';
+import type { Frecuencia } from '@/types/database';
 
 /** Fechas como texto ISO "YYYY-MM-DD" para evitar problemas de zona horaria. */
 
@@ -35,11 +35,11 @@ export function monthRange(year: number, month: number): { start: string; end: s
  * `anchorDay` es el día original de la programación (start_date); evita que
  * 31 ene -> 28 feb -> 28 mar. Con anchorDay se obtiene 31 ene -> 28 feb -> 31 mar.
  */
-export function addInterval(isoDate: string, frequency: Frequency, anchorDay?: number): string {
+export function addInterval(isoDate: string, frecuencia: Frecuencia, anchorDay?: number): string {
   const { y, m, d } = parse(isoDate);
 
-  if (frequency === 'weekly' || frequency === 'biweekly') {
-    const next = new Date(y, m - 1, d + (frequency === 'weekly' ? 7 : 14));
+  if (frecuencia === 'semanal' || frecuencia === 'quincenal') {
+    const next = new Date(y, m - 1, d + (frecuencia === 'semanal' ? 7 : 14));
     return toIsoDate(next);
   }
 
@@ -48,4 +48,10 @@ export function addInterval(isoDate: string, frequency: Frequency, anchorDay?: n
   const nm = (targetMonthIndex % 12) + 1;
   const day = Math.min(anchorDay ?? d, daysInMonth(ny, nm));
   return `${ny}-${pad(nm)}-${pad(day)}`;
+}
+
+/** Suma (o resta, con negativos) días a una fecha ISO "YYYY-MM-DD". */
+export function addDays(isoDate: string, days: number): string {
+  const { y, m, d } = parse(isoDate);
+  return toIsoDate(new Date(y, m - 1, d + days));
 }

@@ -22,7 +22,7 @@ Si mañana cambia la base de datos, solo se modifican los servicios.
 |---|---|---|---|
 | Rutas | `src/app/` | Una pantalla = un archivo. Delgadas. | Lógica de negocio, consultas |
 | Módulos | `src/features/<x>/` | Pantallas, hooks y servicio del módulo | Componentes genéricos |
-| UI compartida | `src/components/ui/` | Botones, campos, tarjetas | Conocimiento de finanzas |
+| UI compartida | `src/components/ui/` | Botones, campos, tarjetas (catálogo en `docs/components.md`) | Conocimiento de finanzas ni llamadas a Supabase |
 | Utilidades | `src/lib/` | Formatos, fechas, validaciones, cliente Supabase | Pantallas |
 | Tipos | `src/types/` | Tipos de la base de datos | Lógica |
 
@@ -38,8 +38,8 @@ Los paréntesis `(auth)` y `(app)` son *grupos de rutas*: organizan archivos sin
 ## Flujo de un dato (ejemplo: listar gastos)
 
 1. `src/app/(app)/expenses.tsx` renderiza la pantalla del módulo.
-2. La pantalla llama a `listTransactions({ type: 'expense' })` de `features/transactions/service.ts`.
-3. El servicio usa el cliente de `src/lib/supabase.ts` y consulta la tabla `transactions`.
+2. La pantalla llama a `listTransactions({ tipo: 'gasto' })` de `features/transactions/service.ts`.
+3. El servicio usa el cliente de `src/lib/supabase.ts` y consulta la tabla `movimientos`.
 4. Supabase aplica **RLS**: solo devuelve filas del usuario autenticado.
 5. La pantalla muestra montos con `formatCurrency` y fechas con `formatDate`.
 
