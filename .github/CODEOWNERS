@@ -1,5 +1,3 @@
-# Integrante 3 (Edgar Mendoza): aún sin usuario de GitHub en el repositorio. Mientras tanto, sus carpetas
-# las revisa el Integrante 1; cuando acepte la invitación, reemplazar el usuario en esas dos líneas.
 # Integrante 1: arquitectura e integración
 # Integrante 2: transacciones | Integrante 3: recurrentes y presupuestos | Integrante 4: reportes
 
@@ -16,6 +14,6 @@
 /src/features/categories/  @jcsantos-g
 /src/features/balance/     @jcsantos-g
 /src/features/transactions/ @gactony
-/src/features/recurring/   @jcsantos-g
-/src/features/budgets/     @jcsantos-g
+/src/features/recurring/   @dlh-lpi
+/src/features/budgets/     @dlh-lpi
 /src/features/reports/     @VoNoStar
