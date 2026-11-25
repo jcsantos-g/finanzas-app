@@ -22,7 +22,7 @@ Si mañana cambia la base de datos, solo se modifican los servicios.
 |---|---|---|---|
 | Rutas | `src/app/` | Una pantalla = un archivo. Delgadas. | Lógica de negocio, consultas |
 | Módulos | `src/features/<x>/` | Pantallas, hooks y servicio del módulo | Componentes genéricos |
-| UI compartida | `src/components/ui/` | Botones, campos, tarjetas | Conocimiento de finanzas |
+| UI compartida | `src/components/ui/` | Botones, campos, tarjetas (catálogo en `docs/components.md`) | Conocimiento de finanzas ni llamadas a Supabase |
 | Utilidades | `src/lib/` | Formatos, fechas, validaciones, cliente Supabase | Pantallas |
 | Tipos | `src/types/` | Tipos de la base de datos | Lógica |
 

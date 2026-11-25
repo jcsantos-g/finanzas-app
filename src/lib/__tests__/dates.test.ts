@@ -1,4 +1,4 @@
-import { addInterval, daysInMonth, monthRange } from '../dates';
+import { addDays, addInterval, daysInMonth, monthRange } from '../dates';
 
 describe('addInterval (RN-09 y RN-10)', () => {
   it('suma 7 días en periodicidad semanal', () => {
@@ -42,5 +42,12 @@ describe('daysInMonth y monthRange', () => {
 
   it('devuelve el primer y último día del mes', () => {
     expect(monthRange(2026, 4)).toEqual({ start: '2026-04-01', end: '2026-04-30' });
+  });
+});
+
+describe('addDays', () => {
+  it('suma y resta días cruzando mes y año', () => {
+    expect(addDays('2026-01-31', 1)).toBe('2026-02-01');
+    expect(addDays('2026-01-01', -1)).toBe('2025-12-31');
   });
 });

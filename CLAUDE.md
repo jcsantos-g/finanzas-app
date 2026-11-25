@@ -16,6 +16,7 @@ src/
   features/
     auth/               # Integrante 1
     dashboard/          # Integrante 1
+    categories/         # Integrante 1 (listCategories, useCategories; compartido por todos)
     transactions/       # Integrante 2
     recurring/          # Integrante 3
     budgets/            # Integrante 3

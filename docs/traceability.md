@@ -11,6 +11,7 @@ Estados: ⬜ pendiente · 🟨 en progreso · ✅ terminado
 | RF-02 | Gestión de ingresos | Integrante 2 | `src/features/transactions` | ⬜ |
 | RF-03 | Gestión de gastos | Integrante 2 | `src/features/transactions` | ⬜ |
 | RF-04 | Dashboard (menú de tarjetas) | Integrante 1 | `src/features/dashboard` | ✅ |
+| — | Componentes compartidos y categorías (base para RF-02/03/05/07) | Integrante 1 | `src/components/ui`, `src/features/categories` | ✅ (ver `docs/components.md`) |
 | RF-05 | Movimientos recurrentes | Integrante 3 | `src/features/recurring` | ⬜ |
 | RF-06 | Dinero disponible | Integrante 2/3 | por definir | ⬜ |
 | RF-07 | Presupuestos | Integrante 3 | `src/features/budgets` | ⬜ |

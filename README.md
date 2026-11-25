@@ -47,6 +47,7 @@ docs/                    Documentación del proyecto
 | [AGENTS.md](AGENTS.md) | Reglas específicas de Expo para herramientas de IA |
 | [docs/architecture.md](docs/architecture.md) | Capas, flujo de datos y decisiones técnicas |
 | [docs/database.md](docs/database.md) | Modelo de datos, RLS y decisiones de diseño |
+| [docs/onboarding.md](docs/onboarding.md) | **Guía de incorporación**: instalar, ejecutar y abrir tu primer PR |
 | [docs/components.md](docs/components.md) | Catálogo de componentes compartidos |
 | [docs/git-workflow.md](docs/git-workflow.md) | Ramas, commits y Pull Requests |
 | [docs/traceability.md](docs/traceability.md) | Requerimientos → módulo → estado |

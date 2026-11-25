@@ -6,7 +6,8 @@ Objetivo del curso: evaluar la implementación de IA en el desarrollo. Cada inte
 
 | Fecha | Integrante | Herramienta | Tarea | Qué se pidió (resumen del prompt) | Utilidad (1-5) | Qué hubo que corregir | Tiempo estimado ahorrado |
 |---|---|---|---|---|---|---|---|
-| _AAAA-MM-DD_ | _1_ | _Claude Code_ | _Cliente Supabase_ | _Crear src/lib/supabase.ts con persistencia de sesión_ | _4_ | _Ajustar variables de entorno_ | _30 min_ |
+| 2026-11-24 | 1 | Claude Code | Estructura inicial | Crear proyecto Expo + Supabase, limpiar plantilla, esquema SQL con RLS, CI, pruebas y docs | 4 | Ajustar tipos de TS 6 (`types: ["jest"]`) y probar el SQL en Supabase real | ~1 día |
+| 2026-11-25 | 1 | Claude Code | Componentes compartidos | MoneyInput, DatePickerField, CategoryPicker, ConfirmModal, ListItem, ProgressBar, estados, hook de categorías, playground y guía de incorporación | _pendiente de calificar_ | _pendiente_ | _pendiente_ |
 
 ## Lecciones aprendidas
 
