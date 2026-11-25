@@ -10,17 +10,19 @@ export type TipoMovimiento = 'ingreso' | 'gasto';
 export type OrigenMovimiento = 'manual' | 'recurrente' | 'ia';
 export type Frecuencia = 'semanal' | 'quincenal' | 'mensual';
 
+// Las filas deben ser `type`: con `interface`, Supabase tipa las tablas como `never`.
+
 /** Tabla `categorias`. */
-export interface Categoria {
+export type Categoria = {
   id: string;
   usuario_id: string;
   nombre: string;
   tipo: TipoMovimiento;
   icono: string | null;
-}
+};
 
 /** Tabla `movimientos`: ingresos y gastos que realmente ocurrieron. */
-export interface Movimiento {
+export type Movimiento = {
   id: string;
   usuario_id: string;
   categoria_id: string;
@@ -34,10 +36,10 @@ export interface Movimiento {
   fecha_programada: string | null; // YYYY-MM-DD
   creado_en: string;
   actualizado_en: string;
-}
+};
 
 /** Tabla `movimientos_recurrentes`: programaciones que se repiten. */
-export interface MovimientoRecurrente {
+export type MovimientoRecurrente = {
   id: string;
   usuario_id: string;
   categoria_id: string;
@@ -50,17 +52,17 @@ export interface MovimientoRecurrente {
   activo: boolean;
   creado_en: string;
   actualizado_en: string;
-}
+};
 
 /** Tabla `presupuestos`. `categoria_id` es null para el presupuesto general del mes. */
-export interface Presupuesto {
+export type Presupuesto = {
   id: string;
   usuario_id: string;
   categoria_id: string | null;
   monto_limite: number;
   mes: string; // YYYY-MM-01
   creado_en: string;
-}
+};
 
 type Insertar<T, Opcionales extends keyof T> = Omit<T, Opcionales> & Partial<Pick<T, Opcionales>>;
 
