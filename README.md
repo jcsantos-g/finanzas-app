@@ -62,5 +62,5 @@ docs/                    Documentación del proyecto
 |---|---|---|---|
 | 1 | Juan Carlos Santos | `jcsantos-g` | Arquitectura, autenticación, Dashboard y Perfil |
 | 2 | Guillermo Calderón | `gactony` | Ingresos y gastos |
-| 3 | Edgar Mendoza | por confirmar | Movimientos recurrentes y presupuestos |
+| 3 | Edgar Mendoza | `dlh-lpi` | Movimientos recurrentes y presupuestos |
 | 4 | Nelson Ortega | `VoNoStar` | Reportes y pruebas |
