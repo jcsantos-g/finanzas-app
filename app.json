@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "finanzas-app",
+    "name": "Finanzas Personales",
     "slug": "finanzas-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,7 +20,6 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "output": "server",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [

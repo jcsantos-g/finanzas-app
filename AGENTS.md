@@ -1,41 +1,41 @@
-This is an Expo/React Native mobile application. Prioritize mobile-first patterns, performance, and cross-platform compatibility.
+Esta es una aplicación móvil Expo/React Native. Prioriza patrones pensados para móvil, rendimiento y compatibilidad multiplataforma.
 
-## Expo has changed — do not trust your training data
+## Expo cambia: no confíes en lo que recuerdas
 
-Expo ships breaking changes every SDK release. APIs you remember are likely renamed, moved, or removed. Before writing any code that touches an Expo, EAS, or React Native API:
+Expo publica cambios incompatibles en cada versión del SDK. Las APIs que recuerdas pueden haber cambiado de nombre, de lugar o haber sido eliminadas. Antes de escribir código que toque una API de Expo, EAS o React Native:
 
-1. Read the major version of the `expo` package in `package.json`.
-2. Fetch the matching versioned docs: `https://docs.expo.dev/versions/v<major>.0.0/`
-3. For anything else, fetch https://docs.expo.dev/llms.txt — an index of all Expo docs with corrections to common LLM misconceptions. Follow its links to the specific page you need; never answer from memory.
+1. Lee la versión mayor del paquete `expo` en `package.json`.
+2. Consulta la documentación de esa versión: `https://docs.expo.dev/versions/v<major>.0.0/`
+3. Para cualquier otra cosa, consulta https://docs.expo.dev/llms.txt, un índice de toda la documentación de Expo con correcciones a errores comunes de los modelos de IA. Sigue sus enlaces hasta la página que necesites; nunca respondas de memoria.
 
-## Commands
+## Comandos
 
-Use `bunx` instead of `npx` if the project uses bun (`bun.lock` present).
+Usa `bunx` en lugar de `npx` si el proyecto usa bun (si existe `bun.lock`).
 
 ```bash
-npx expo install <package>  # ALWAYS use instead of npm/yarn/pnpm/bun add — resolves SDK-compatible versions
-npx expo start              # start the dev server
-npx expo lint               # lint
-npx tsc --noEmit            # typecheck
-npx expo-doctor             # diagnose dependency and config issues
-npx expo install --fix      # fix incompatible package versions
+npx expo install <paquete>  # SIEMPRE en lugar de npm/yarn/pnpm/bun add: resuelve versiones compatibles con el SDK
+npx expo start              # inicia el servidor de desarrollo
+npx expo lint               # linter
+npx tsc --noEmit            # verificación de tipos
+npx expo-doctor             # diagnostica problemas de dependencias y configuración
+npx expo install --fix      # corrige versiones incompatibles de paquetes
 ```
 
-Run lint and typecheck before declaring any task done.
+Ejecuta el linter y la verificación de tipos antes de dar una tarea por terminada.
 
-## Navigation & Routing
+## Navegación y rutas
 
-- Use **Expo Router** for all navigation. Routes live in `src/app/` — every file there is a screen, `_layout.tsx` files define navigators. Keep non-route code (components, hooks, utils) outside `src/app/`.
-- Import `Link`, `router`, and `useLocalSearchParams` from `expo-router`.
-- Docs: https://docs.expo.dev/router/introduction.md
+- Usa **Expo Router** para toda la navegación. Las rutas viven en `src/app/`: cada archivo es una pantalla y los `_layout.tsx` definen los navegadores. Mantén el código que no es de rutas (componentes, hooks, utilidades) fuera de `src/app/`.
+- Importa `Link`, `router` y `useLocalSearchParams` desde `expo-router`.
+- Documentación: https://docs.expo.dev/router/introduction.md
 
-## Building with EAS
+## Compilación con EAS
 
-Use EAS to build, sign, and submit the app in the cloud (`eas build`, `eas submit`) and to ship over-the-air updates (`eas update`) — no local Xcode or Android Studio required. Run EAS CLI as `bunx eas-cli <command>` in Bun projects, or `npx eas-cli@latest <command>` otherwise; substitute that for bare `eas` in docs examples.
-Docs: https://docs.expo.dev/eas/index.md
+Usa EAS para compilar, firmar y publicar la app en la nube (`eas build`, `eas submit`) y para enviar actualizaciones por aire (`eas update`), sin necesitar Xcode ni Android Studio local. Ejecuta EAS CLI como `bunx eas-cli <comando>` en proyectos con Bun, o `npx eas-cli@latest <comando>` en los demás; sustitúyelo por `eas` a secas en los ejemplos de la documentación.
+Documentación: https://docs.expo.dev/eas/index.md
 
-## Rules
+## Reglas
 
-- If `ios/` and `android/` directories do not exist, they are generated (Continuous Native Generation). Never create or edit them by hand — configure native behavior in `app.json` and config plugins.
-- Expo Go only includes its bundled native modules. After adding a library with native code, the app needs a development build: `npx expo run:ios|android` locally, or `eas build --profile development`.
-- Prefer recommended Expo modules over third-party libraries, and check your available skills before adding dependencies. Docs: https://docs.expo.dev/versions/latest/index.md
+- Si no existen las carpetas `ios/` y `android/`, se generan automáticamente (Continuous Native Generation). Nunca las crees ni edites a mano: configura el comportamiento nativo en `app.json` y con config plugins.
+- Expo Go solo incluye sus módulos nativos integrados. Después de agregar una librería con código nativo, la app necesita un development build: `npx expo run:ios|android` en local, o `eas build --profile development`.
+- Prefiere los módulos recomendados de Expo sobre librerías de terceros, y revisa tus skills disponibles antes de agregar dependencias. Documentación: https://docs.expo.dev/versions/latest/index.html

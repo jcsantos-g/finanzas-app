@@ -36,8 +36,13 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-example
 
 # generated native folders
 /ios
 /android
+
+# secrets
+.env
+
+# configuración local de herramientas de IA
+.claude/

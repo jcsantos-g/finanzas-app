@@ -1,0 +1,18 @@
+# Reemplaza cada @usuario por el usuario real de GitHub.
+# Integrante 1: arquitectura e integración
+# Integrante 2: transacciones | Integrante 3: recurrentes y presupuestos | Integrante 4: reportes
+
+/src/components/ui/        @INTEGRANTE1
+/src/lib/                  @INTEGRANTE1
+/src/types/                @INTEGRANTE1
+/supabase/                 @INTEGRANTE1
+/src/app/_layout.tsx           @INTEGRANTE1
+/CLAUDE.md                 @INTEGRANTE1
+/docs/components.md        @INTEGRANTE1
+
+/src/features/auth/        @INTEGRANTE1
+/src/features/dashboard/   @INTEGRANTE1
+/src/features/transactions/ @INTEGRANTE2
+/src/features/recurring/   @INTEGRANTE3
+/src/features/budgets/     @INTEGRANTE3
+/src/features/reports/     @INTEGRANTE4
