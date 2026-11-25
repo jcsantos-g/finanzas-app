@@ -22,9 +22,9 @@ import { formatCurrency } from '@/lib/formatters';
 import { isPositiveAmount } from '@/lib/validators';
 
 const DEMO_CATEGORIES = [
-  { id: '1', name: 'Alimentación', icon: '🍽️' },
-  { id: '2', name: 'Transporte', icon: '🚌' },
-  { id: '3', name: 'Salud', icon: '🩺' },
+  { id: '1', nombre: 'Alimentación', icono: '🍽️' },
+  { id: '2', nombre: 'Transporte', icono: '🚌' },
+  { id: '3', nombre: 'Salud', icono: '🩺' },
 ];
 
 /**

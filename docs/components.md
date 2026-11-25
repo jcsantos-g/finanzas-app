@@ -28,7 +28,7 @@ Para verlos funcionando: abre la app en modo desarrollo → Perfil → "Ver cat�
 ### Ejemplo: formulario de gasto armado solo con componentes compartidos
 
 ```tsx
-const { categories } = useCategories('expense'); // features/categories
+const { categories } = useCategories('gasto'); // features/categories
 
 <MoneyInput value={amount} onChange={setAmount} error={error} />
 <DatePickerField value={date} onChange={setDate} />
@@ -60,8 +60,8 @@ const { categories } = useCategories('expense'); // features/categories
 
 | Elemento | Descripción |
 |---|---|
-| `listCategories(type)` | Categorías del usuario por tipo (`income` / `expense`) |
-| `useCategories(type)` | Hook: `{ categories, loading, error, reload }` |
+| `listCategories(tipo)` | Categorías del usuario por tipo (`ingreso` / `gasto`) |
+| `useCategories(tipo)` | Hook: `{ categories, loading, error, reload }` |
 
 ## Cómo proponer un componente nuevo
 

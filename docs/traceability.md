@@ -22,8 +22,8 @@ Estados: ⬜ pendiente · 🟨 en progreso · ✅ terminado
 |---|---|---|
 | RN-01 / RN-14 Aislamiento por usuario | RLS en `supabase/migrations/0001_init.sql` | ✅ (falta probar con 2 cuentas) |
 | RN-02 Monto > 0 | `validators.ts` + `check` SQL | ✅ |
-| RN-03 Estructura única de movimientos | Tabla `transactions` con `type` | ✅ |
-| RN-05 / RN-11 Pendientes no afectan cálculos | Cálculos solo sobre `transactions` | ⬜ al implementar |
+| RN-03 Estructura única de movimientos | Tabla `movimientos` con `tipo` | ✅ |
+| RN-05 / RN-11 Pendientes no afectan cálculos | Cálculos solo sobre `movimientos` | ⬜ al implementar |
 | RN-09 / RN-10 Siguiente fecha | `lib/dates.ts` + pruebas | ✅ |
 | Anti-duplicados de recurrentes | Índice único SQL | ✅ |
 

@@ -2,12 +2,12 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Palette } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
-import type { Category } from '@/types/database';
+import type { Categoria } from '@/types/database';
 
 type Props = {
   label?: string;
   /** Categorías ya filtradas por tipo (ver useCategories en features/categories). */
-  categories: Pick<Category, 'id' | 'name' | 'icon'>[];
+  categories: Pick<Categoria, 'id' | 'nombre' | 'icono'>[];
   value: string | null;
   onChange: (categoryId: string) => void;
   error?: string;
@@ -30,8 +30,8 @@ export function CategoryPicker({ label = 'Categoría', categories, value, onChan
               onPress={() => onChange(c.id)}
               style={[styles.chip, { backgroundColor: active ? Palette.primary : theme.backgroundElement }]}>
               <Text style={{ color: active ? '#FFFFFF' : theme.text, fontWeight: '600' }}>
-                {c.icon ? `${c.icon} ` : ''}
-                {c.name}
+                {c.icono ? `${c.icono} ` : ''}
+                {c.nombre}
               </Text>
             </Pressable>
           );

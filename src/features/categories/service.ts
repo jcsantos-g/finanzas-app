@@ -1,13 +1,13 @@
 import { supabase } from '@/lib/supabase';
-import type { Category, MovementType } from '@/types/database';
+import type { Categoria, TipoMovimiento } from '@/types/database';
 
 /** Lista las categorías del usuario de un tipo (ingreso o gasto), ordenadas por nombre. */
-export async function listCategories(type: MovementType): Promise<Category[]> {
+export async function listCategories(tipo: TipoMovimiento): Promise<Categoria[]> {
   const { data, error } = await supabase
-    .from('categories')
+    .from('categorias')
     .select('*')
-    .eq('type', type)
-    .order('name', { ascending: true });
+    .eq('tipo', tipo)
+    .order('nombre', { ascending: true });
   if (error) throw error;
   return data;
 }
