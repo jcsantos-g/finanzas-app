@@ -8,6 +8,7 @@ Este documento resume **qué hace y por qué**, para poder defenderlo en la pres
 | Archivo | Qué hace |
 |---|---|
 | `0001_init.sql` | Crea todo el esquema. Ejecutar una sola vez en un proyecto vacío |
+| `0003_dinero_disponible.sql` | Crea la función `dinero_disponible()` (RF-06). Ejecutar después de `0001` |
 | `0002_iconos_a_claves.sql` | **Solo si ya ejecutaste un `0001` antiguo** con emojis: los convierte en claves. Es seguro ejecutarlo de todos modos |
 
 ## Cómo aplicarlo

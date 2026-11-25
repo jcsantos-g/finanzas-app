@@ -11,6 +11,7 @@ Objetivo del curso: evaluar la implementación de IA en el desarrollo. Cada inte
 | 2026-11-25 | 1 | Claude Code | Base de datos en español | Reescribir el SQL con nombres en español, comentarios explicativos y COMMENT ON; adaptar tipos, servicios, pruebas y docs | _pendiente de calificar_ | _pendiente (probar el SQL en Supabase real)_ | _pendiente_ |
 | 2026-11-25 | 1 | Claude Code | Íconos de categorías | Reemplazar emojis por claves + @expo/vector-icons: componentes Icon/CategoryIcon, catálogo, migración 0002 y docs | _pendiente de calificar_ | _pendiente_ | _pendiente_ |
 | 2026-11-25 | 1 | Claude Code | Correcciones tras primera prueba | Corregir "Unmatched Route" y hacer intuitivo el catálogo de componentes (secciones, explicaciones, ejemplos interactivos) | _pendiente de calificar_ | El catálogo inicial tenía botones sin respuesta y una carga permanente sin explicación | _pendiente_ |
+| 2026-11-25 | 1 | Claude Code | Preparación del equipo y dinero disponible | Crear ramas e Issues; función SQL `dinero_disponible` y tarjeta en el Dashboard | _pendiente de calificar_ | _pendiente_ | _pendiente_ |
 
 ## Lecciones aprendidas
 

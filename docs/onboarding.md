@@ -51,7 +51,10 @@ npm run check     # tipos + linter + pruebas
 ```bash
 git checkout develop && git pull
 git checkout feature/<tu-modulo>
+git merge origin/develop     # traer lo último antes de empezar
 ```
+
+Tus tareas están en los [Issues](https://github.com/jcsantos-g/finanzas-app/issues) del repositorio.
 
 **Solo toca tu carpeta.** Si necesitas cambiar algo de `src/components/ui`, `src/lib`, `src/types` o `supabase/`, avisa al Integrante 1.
 
