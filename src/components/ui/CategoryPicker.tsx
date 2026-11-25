@@ -4,6 +4,8 @@ import { Palette } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { Categoria } from '@/types/database';
 
+import { CategoryIcon } from './Icon';
+
 type Props = {
   label?: string;
   /** Categorías ya filtradas por tipo (ver useCategories en features/categories). */
@@ -22,6 +24,7 @@ export function CategoryPicker({ label = 'Categoría', categories, value, onChan
       <View style={styles.chips}>
         {categories.map((c) => {
           const active = c.id === value;
+          const color = active ? '#FFFFFF' : theme.text;
           return (
             <Pressable
               key={c.id}
@@ -29,10 +32,8 @@ export function CategoryPicker({ label = 'Categoría', categories, value, onChan
               accessibilityState={{ selected: active }}
               onPress={() => onChange(c.id)}
               style={[styles.chip, { backgroundColor: active ? Palette.primary : theme.backgroundElement }]}>
-              <Text style={{ color: active ? '#FFFFFF' : theme.text, fontWeight: '600' }}>
-                {c.icono ? `${c.icono} ` : ''}
-                {c.nombre}
-              </Text>
+              <CategoryIcon clave={c.icono} size={18} color={color} />
+              <Text style={{ color, fontWeight: '600' }}>{c.nombre}</Text>
             </Pressable>
           );
         })}
@@ -46,6 +47,6 @@ const styles = StyleSheet.create({
   wrapper: { gap: 6 },
   label: { fontSize: 14, fontWeight: '600' },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { paddingHorizontal: 14, paddingVertical: 10, borderRadius: 999 },
+  chip: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 999 },
   error: { color: Palette.danger, fontSize: 13 },
 });
