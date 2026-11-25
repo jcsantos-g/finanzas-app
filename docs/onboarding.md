@@ -26,6 +26,8 @@ npm install
 2. Pide al Integrante 1 la URL y la *anon key* de Supabase **por un canal privado** (nunca por el repositorio ni en capturas públicas).
 3. Pégalas en `.env`. Ese archivo está ignorado por Git: no se sube.
 
+> La base de datos es **compartida y ya está creada**: no ejecutes los archivos de `supabase/migrations`. Si tu módulo necesita un cambio en la base, pídelo al Integrante 1. Cada quien crea su propia cuenta en la app y, gracias a RLS, solo ve sus datos.
+
 ## 4. Ejecutar la app
 
 ```bash
@@ -33,6 +35,8 @@ npx expo start
 ```
 
 Escanea el código QR con Expo Go. Desde Perfil → "Ver catálogo de componentes" puedes ver todos los componentes disponibles.
+
+Si Expo Go avisa que la versión no es compatible, actualízalo desde la tienda (el proyecto usa Expo SDK 58). Si el teléfono no conecta, usa `npx expo start --tunnel`.
 
 Antes de cualquier cambio, comprueba que todo está bien:
 
