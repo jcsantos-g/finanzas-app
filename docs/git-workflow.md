@@ -10,19 +10,16 @@ main      ← versión estable (lo que se presenta)
        └─ feature/reports             (Integrante 4)
 ```
 
-## Configuración inicial (Integrante 1, una sola vez)
+## Estado actual del repositorio
 
-```bash
-git remote add origin <URL_DEL_REPO>
-git add . && git commit -m "chore: estructura inicial del proyecto"
-git push -u origin main
-git checkout -b develop && git push -u origin develop
-```
+Repositorio: <https://github.com/jcsantos-g/finanzas-app> (público).
 
-En GitHub → Settings → Branches, crea reglas para `main` y `develop`:
-*Require a pull request before merging*, *Require status checks (CI)* y *Require review from Code Owners*.
+- Ramas `main` y `develop` creadas y **protegidas**: exigen Pull Request, 1 aprobación y que la CI (`check`) pase. No se permiten pushes forzados ni borrar las ramas.
+- El dueño del repositorio puede saltarse la aprobación (necesario porque nadie puede aprobar su propio PR).
+- `.github/CODEOWNERS` asigna cada carpeta a su responsable. Pendiente: usuario de GitHub del Integrante 3.
+- Integrantes 2 y 4 invitados como colaboradores con permiso de escritura.
 
-Antes de empezar, reemplaza `@INTEGRANTE1…4` en `.github/CODEOWNERS` por los usuarios reales.
+Pasos para quien arranca desde cero: ver [onboarding.md](onboarding.md).
 
 ## Día a día de cada integrante
 

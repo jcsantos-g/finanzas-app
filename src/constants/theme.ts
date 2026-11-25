@@ -50,3 +50,11 @@ export const Fonts = Platform.select({
     mono: 'var(--font-mono)',
   },
 });
+
+/** Colores de acento compartidos (iguales en modo claro y oscuro). */
+export const Palette = {
+  primary: '#2563EB',
+  danger: '#DC2626',
+  success: '#16A34A',
+  warning: '#D97706',
+} as const;

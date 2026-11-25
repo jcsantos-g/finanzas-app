@@ -49,3 +49,9 @@ export function addInterval(isoDate: string, frequency: Frequency, anchorDay?: n
   const day = Math.min(anchorDay ?? d, daysInMonth(ny, nm));
   return `${ny}-${pad(nm)}-${pad(day)}`;
 }
+
+/** Suma (o resta, con negativos) días a una fecha ISO "YYYY-MM-DD". */
+export function addDays(isoDate: string, days: number): string {
+  const { y, m, d } = parse(isoDate);
+  return toIsoDate(new Date(y, m - 1, d + days));
+}
