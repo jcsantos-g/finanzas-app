@@ -3,8 +3,10 @@ import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { Card, Icon, ScreenContainer, type IconName } from '@/components/ui';
+import { BalanceCard } from '@/features/balance/BalanceCard';
 
-// RF-04: el Dashboard es solo un menú de tarjetas, sin gráficos ni estadísticas.
+// RF-04: el Dashboard es un menú de tarjetas. Solo muestra el dinero disponible (decisión del equipo);
+// los gráficos y estadísticas van en Reportes.
 const ITEMS: { title: string; icon: IconName; href: Href }[] = [
   { title: 'Ingresos', icon: 'cash-plus', href: '/income' },
   { title: 'Gastos', icon: 'cash-minus', href: '/expenses' },
@@ -20,6 +22,7 @@ export function DashboardScreen() {
   return (
     <ScreenContainer scroll>
       <ThemedText type="title">Mis finanzas</ThemedText>
+      <BalanceCard />
       <View style={styles.grid}>
         {ITEMS.map((item) => (
           <Card key={item.title} style={styles.cell} onPress={() => router.push(item.href)}>
@@ -34,5 +37,5 @@ export function DashboardScreen() {
 
 const styles = StyleSheet.create({
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
-  cell: { width: '47%', minHeight: 110, justifyContent: 'center', alignItems: 'center', gap: 8 },
+  cell: { flexBasis: '45%', flexGrow: 1, minHeight: 110, justifyContent: 'center', alignItems: 'center', gap: 8 },
 });

@@ -18,6 +18,9 @@ Repositorio: <https://github.com/jcsantos-g/finanzas-app> (público).
 - El dueño del repositorio puede saltarse la aprobación (necesario porque nadie puede aprobar su propio PR).
 - `.github/CODEOWNERS` asigna cada carpeta a su responsable. Pendiente: usuario de GitHub del Integrante 3.
 - Integrantes 2 y 4 invitados como colaboradores con permiso de escritura.
+- Ramas `feature/transactions`, `feature/recurring-budgets` y `feature/reports` creadas. Antes de empezar a trabajar en una, ejecutar `git merge origin/develop`.
+- Hay un Issue por requerimiento en <https://github.com/jcsantos-g/finanzas-app/issues>. Cada PR indica `Closes #<número>`. Como los PR van a `develop`, el Issue se cierra a mano o cuando el cambio llega a `main`.
+- Las versiones de `develop` a `main` se fusionan con **merge commit** (no *squash*), para que las dos ramas no se separen.
 
 Pasos para quien arranca desde cero: ver [onboarding.md](onboarding.md).
 

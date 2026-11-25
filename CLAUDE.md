@@ -17,6 +17,7 @@ src/
     auth/               # Integrante 1
     dashboard/          # Integrante 1
     categories/         # Integrante 1 (listCategories, useCategories; compartido por todos)
+    balance/            # Integrante 1 (dinero disponible: BalanceCard, useAvailableBalance)
     transactions/       # Integrante 2
     recurring/          # Integrante 3
     budgets/            # Integrante 3
@@ -50,7 +51,8 @@ Tablas (en español): `categorias`, `movimientos`, `movimientos_recurrentes`, `p
 ## Reglas de negocio que el código debe respetar
 
 - **RN-02**: todo monto > 0 (validar en formulario y con `CHECK` en base de datos).
-- **Dinero disponible** = ingresos reales − gastos reales. Solo tabla `movimientos`.
+- **Dinero disponible** = ingresos reales − gastos reales. Solo tabla `movimientos`. Ya está implementado en `features/balance` (función SQL `dinero_disponible`): reutilizarlo, no recalcularlo.
+- **Dashboard**: menú de tarjetas + únicamente el dinero disponible (decisión del equipo). Gráficos y estadísticas van en Reportes.
 - **RN-05/RN-11**: los recurrentes pendientes NO afectan saldo, presupuestos ni reportes.
 - **RN-06**: confirmar un recurrente crea un `movimiento` (`origen = 'recurrente'`, con `movimiento_recurrente_id` y `fecha_programada`) y avanza `proxima_fecha`.
 - **RN-07**: omitir no crea movimiento, solo avanza `proxima_fecha`.
