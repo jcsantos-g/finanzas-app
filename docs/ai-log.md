@@ -13,6 +13,7 @@ Objetivo del curso: evaluar la implementación de IA en el desarrollo. Cada inte
 | 2026-11-25 | 1 | Claude Code | Correcciones tras primera prueba | Corregir "Unmatched Route" y hacer intuitivo el catálogo de componentes (secciones, explicaciones, ejemplos interactivos) | _pendiente de calificar_ | El catálogo inicial tenía botones sin respuesta y una carga permanente sin explicación | _pendiente_ |
 | 2026-11-25 | 1 | Claude Code | Preparación del equipo y dinero disponible | Crear ramas e Issues; función SQL `dinero_disponible` y tarjeta en el Dashboard | _pendiente de calificar_ | La fusión a `main` la frenó el control de permisos de la herramienta y requirió autorización | _pendiente_ |
 | 2026-11-25 | 1 | Claude Code | Cierre de la base | Actualizar documentación, publicar la versión base en `main` y verificar un clon limpio | _pendiente de calificar_ | _pendiente_ | _pendiente_ |
+| 2026-11-25 | 2 | ChatGPT | Corrección de tipos de Supabase | Analizar errores de TypeScript en .insert() y .update() y proponer el cambio de cuatro declaraciones interface a type | pendiente de calificar | Se corrigió un error inicial de sintaxis al convertir las declaraciones; posteriormente npm run typecheck finalizó sin errores | pendiente |
 
 ## Lecciones aprendidas
 
