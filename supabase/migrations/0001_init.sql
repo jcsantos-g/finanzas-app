@@ -59,7 +59,7 @@ create table public.categorias (
   nombre     text not null check (char_length(btrim(nombre)) between 1 and 60),
   -- A qué tipo de movimiento aplica: solo 'ingreso' o 'gasto'.
   tipo       text not null check (tipo in ('ingreso', 'gasto')),
-  -- Emoji o nombre de ícono (opcional).
+  -- Clave del ícono (ej. 'alimentacion'); la app la traduce a un ícono vectorial (opcional).
   icono      text,
   -- Estas dos restricciones "únicas" cumplen funciones distintas:
   -- (1) permite que otras tablas verifiquen dueño y tipo de la categoría con una sola llave foránea;
@@ -243,18 +243,18 @@ set search_path = public
 as $$
 begin
   insert into public.categorias (usuario_id, nombre, tipo, icono) values
-    (new.id, 'Salario',          'ingreso', '💼'),
-    (new.id, 'Negocio',          'ingreso', '🏪'),
-    (new.id, 'Regalos',          'ingreso', '🎁'),
-    (new.id, 'Otros ingresos',   'ingreso', '➕'),
-    (new.id, 'Alimentación',     'gasto',   '🍽️'),
-    (new.id, 'Transporte',       'gasto',   '🚌'),
-    (new.id, 'Vivienda',         'gasto',   '🏠'),
-    (new.id, 'Servicios',        'gasto',   '💡'),
-    (new.id, 'Salud',            'gasto',   '🩺'),
-    (new.id, 'Educación',        'gasto',   '📚'),
-    (new.id, 'Entretenimiento',  'gasto',   '🎬'),
-    (new.id, 'Otros gastos',     'gasto',   '➖');
+    (new.id, 'Salario',          'ingreso', 'salario'),
+    (new.id, 'Negocio',          'ingreso', 'negocio'),
+    (new.id, 'Regalos',          'ingreso', 'regalos'),
+    (new.id, 'Otros ingresos',   'ingreso', 'otros_ingresos'),
+    (new.id, 'Alimentación',     'gasto',   'alimentacion'),
+    (new.id, 'Transporte',       'gasto',   'transporte'),
+    (new.id, 'Vivienda',         'gasto',   'vivienda'),
+    (new.id, 'Servicios',        'gasto',   'servicios'),
+    (new.id, 'Salud',            'gasto',   'salud'),
+    (new.id, 'Educación',        'gasto',   'educacion'),
+    (new.id, 'Entretenimiento',  'gasto',   'entretenimiento'),
+    (new.id, 'Otros gastos',     'gasto',   'otros_gastos');
   return new;
 end;
 $$;
@@ -276,7 +276,7 @@ comment on column public.categorias.id         is 'Identificador único de la ca
 comment on column public.categorias.usuario_id is 'Dueño de la categoría (usuario de Supabase Auth).';
 comment on column public.categorias.nombre     is 'Nombre visible, por ejemplo "Alimentación".';
 comment on column public.categorias.tipo       is 'A qué aplica: ingreso o gasto.';
-comment on column public.categorias.icono      is 'Emoji o nombre de ícono (opcional).';
+comment on column public.categorias.icono      is 'Clave del ícono (ej. alimentacion). La app la traduce a un ícono vectorial; ver CATEGORY_ICONS en src/components/ui/iconCatalog.ts. Opcional.';
 
 comment on table public.movimientos_recurrentes is
   'Programaciones de ingresos/gastos que se repiten. Mientras están pendientes NO afectan saldo ni presupuestos; al confirmarse generan un registro en movimientos.';

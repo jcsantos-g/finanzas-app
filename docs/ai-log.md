@@ -9,6 +9,7 @@ Objetivo del curso: evaluar la implementación de IA en el desarrollo. Cada inte
 | 2026-11-24 | 1 | Claude Code | Estructura inicial | Crear proyecto Expo + Supabase, limpiar plantilla, esquema SQL con RLS, CI, pruebas y docs | 4 | Ajustar tipos de TS 6 (`types: ["jest"]`) y probar el SQL en Supabase real | ~1 día |
 | 2026-11-25 | 1 | Claude Code | Componentes compartidos | MoneyInput, DatePickerField, CategoryPicker, ConfirmModal, ListItem, ProgressBar, estados, hook de categorías, playground y guía de incorporación | _pendiente de calificar_ | _pendiente_ | _pendiente_ |
 | 2026-11-25 | 1 | Claude Code | Base de datos en español | Reescribir el SQL con nombres en español, comentarios explicativos y COMMENT ON; adaptar tipos, servicios, pruebas y docs | _pendiente de calificar_ | _pendiente (probar el SQL en Supabase real)_ | _pendiente_ |
+| 2026-11-25 | 1 | Claude Code | Íconos de categorías | Reemplazar emojis por claves + @expo/vector-icons: componentes Icon/CategoryIcon, catálogo, migración 0002 y docs | _pendiente de calificar_ | _pendiente_ | _pendiente_ |
 
 ## Lecciones aprendidas
 

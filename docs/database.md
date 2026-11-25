@@ -3,6 +3,13 @@
 El esquema completo está en [`supabase/migrations/0001_init.sql`](../supabase/migrations/0001_init.sql). Todo está en **español** (tablas, columnas y valores) y el propio script explica cada elemento con comentarios, además de dejar una descripción guardada en la base (`COMMENT ON`) que se ve en el panel de Supabase.
 Este documento resume **qué hace y por qué**, para poder defenderlo en la presentación.
 
+## Migraciones
+
+| Archivo | Qué hace |
+|---|---|
+| `0001_init.sql` | Crea todo el esquema. Ejecutar una sola vez en un proyecto vacío |
+| `0002_iconos_a_claves.sql` | **Solo si ya ejecutaste un `0001` antiguo** con emojis: los convierte en claves. Es seguro ejecutarlo de todos modos |
+
 ## Cómo aplicarlo
 
 1. Crea un proyecto en [supabase.com](https://supabase.com).
@@ -32,7 +39,7 @@ npx supabase gen types typescript --project-id <ID_DEL_PROYECTO> > src/types/dat
 
 | Tabla | Columnas |
 |---|---|
-| `categorias` | `id`, `usuario_id` (user_id), `nombre` (name), `tipo` (type), `icono` (icon) |
+| `categorias` | `id`, `usuario_id` (user_id), `nombre` (name), `tipo` (type), `icono` (icon: **clave**, no emoji) |
 | `movimientos` | `id`, `usuario_id`, `categoria_id`, `tipo`, `monto` (amount), `fecha` (occurred_at), `descripcion`, `establecimiento` (merchant), `origen` (source), `movimiento_recurrente_id` (recurring_schedule_id), `fecha_programada` (scheduled_date), `creado_en`, `actualizado_en` |
 | `movimientos_recurrentes` | `id`, `usuario_id`, `categoria_id`, `tipo`, `monto_esperado` (expected_amount), `frecuencia` (frequency), `fecha_inicio` (start_date), `proxima_fecha` (next_due_date), `descripcion`, `activo` (is_active), `creado_en`, `actualizado_en` |
 | `presupuestos` | `id`, `usuario_id`, `categoria_id` (vacío = general), `monto_limite` (amount_limit), `mes` (period_month), `creado_en` |
@@ -76,6 +83,7 @@ erDiagram
 
 | Decisión | Por qué |
 |---|---|
+| `icono` guarda una clave, no un emoji | Los emojis se ven distinto en cada dispositivo y no se pueden tematizar. La app traduce la clave a un ícono vectorial (`iconCatalog.ts`); cambiar de librería no toca los datos |
 | Nombres en español | Todo el equipo entiende la base de datos sin traducir. Los nombres de funciones y componentes del código siguen en inglés |
 | `usuario_id` con `default auth.uid()` | El cliente no necesita enviar su propio id, así no puede "falsificarlo" |
 | **RLS** con una política por tabla | Aunque alguien conozca la API, solo ve sus filas (RN-01, RN-14). El aislamiento no depende del código de la app |

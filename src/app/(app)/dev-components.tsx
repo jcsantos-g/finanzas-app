@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import {
   Button,
+  CategoryIcon,
   CategoryPicker,
+  CATEGORY_ICONS,
   Card,
   ConfirmModal,
   DatePickerField,
@@ -22,9 +25,9 @@ import { formatCurrency } from '@/lib/formatters';
 import { isPositiveAmount } from '@/lib/validators';
 
 const DEMO_CATEGORIES = [
-  { id: '1', nombre: 'Alimentación', icono: '🍽️' },
-  { id: '2', nombre: 'Transporte', icono: '🚌' },
-  { id: '3', nombre: 'Salud', icono: '🩺' },
+  { id: '1', nombre: 'Alimentación', icono: 'alimentacion' },
+  { id: '2', nombre: 'Transporte', icono: 'transporte' },
+  { id: '3', nombre: 'Salud', icono: 'salud' },
 ];
 
 /**
@@ -68,6 +71,20 @@ export default function DevComponentsRoute() {
       <ThemedText type="smallBold">CategoryPicker</ThemedText>
       <CategoryPicker categories={DEMO_CATEGORIES} value={category} onChange={setCategory} />
 
+      <ThemedText type="smallBold">Íconos de categorías (clave → ícono)</ThemedText>
+
+      <View style={styles.icons}>
+
+        {Object.keys(CATEGORY_ICONS).map((clave) => (
+          <View key={clave} style={styles.iconCell}>
+            <CategoryIcon clave={clave} size={26} />
+            <Text style={styles.iconLabel} numberOfLines={1}>{clave}</Text>
+          </View>
+        ))}
+
+      </View>
+
+      
       <ThemedText type="smallBold">Card y ListItem</ThemedText>
       <Card>
         <ThemedText>Contenido de una tarjeta</ThemedText>
@@ -99,3 +116,9 @@ export default function DevComponentsRoute() {
     </ScreenContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  icons: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
+  iconCell: { width: 84, alignItems: 'center', gap: 4 },
+  iconLabel: { fontSize: 11, color: '#888' },
+});
