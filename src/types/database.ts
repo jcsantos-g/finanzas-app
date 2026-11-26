@@ -10,6 +10,8 @@ export type TipoMovimiento = 'ingreso' | 'gasto';
 export type OrigenMovimiento = 'manual' | 'recurrente' | 'ia';
 export type Frecuencia = 'semanal' | 'quincenal' | 'mensual';
 
+// Las filas deben ser `type`: con `interface`, Supabase tipa las tablas como `never`.
+
 /** Tabla `categorias`. */
 export type Categoria = {
   id: string;
