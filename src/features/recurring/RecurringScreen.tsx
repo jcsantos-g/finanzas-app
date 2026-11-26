@@ -1,382 +1,193 @@
-import { useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useState } from 'react';
 
 import { ThemedText } from '@/components/themed-text';
-import {
-  Button,
-  Card,
-  CategoryPicker,
-  ConfirmModal,
-  DatePickerField,
-  EmptyState,
-  ErrorState,
-  ListItem,
-  LoadingState,
-  MoneyInput,
-  ScreenContainer,
-  TextField,
-} from '@/components/ui';
+import { Button, ConfirmModal, EmptyState, ErrorState, LoadingState, ScreenContainer } from '@/components/ui';
 import { useCategories } from '@/features/categories/useCategories';
-import {
-  createRecurringExpense,
-  deleteRecurringExpense,
-  resolveRecurringExpenseOccurrence,
-  setRecurringExpenseActive,
-  updateRecurringExpense,
-} from '@/features/recurring/service';
-import type { RecurringExpenseAction, RecurringExpenseInput, RecurringExpenseUpdate } from '@/features/recurring/types';
-import { formatCurrency, formatDate } from '@/lib/formatters';
 import { todayIso } from '@/lib/dates';
+import { formatDate } from '@/lib/formatters';
 import { isPositiveAmount } from '@/lib/validators';
-import type { Frecuencia, MovimientoRecurrente } from '@/types/database';
+import type { MovimientoRecurrente } from '@/types/database';
 
-import { useRecurringExpenses } from './useRecurringExpenses';
-
-type FormState = {
-  mode: 'create' | 'edit';
-  schedule: MovimientoRecurrente | null;
-  amount: number | null;
-  categoryId: string | null;
-  frequency: Frecuencia;
-  startDate: string;
-  description: string;
-};
+import { RecurringCard } from './components/RecurringCard';
+import { RecurringForm, type FormState } from './components/RecurringForm';
+import { getErrorMessage } from './errors';
+import { useRecurringMovements } from './hooks/useRecurringMovements';
+import {
+  createRecurring,
+  deleteRecurring,
+  resolveRecurringOccurrence,
+  setRecurringActive,
+  updateRecurring,
+} from './service';
 
 type PendingAction = { type: 'skip' | 'delete'; schedule: MovimientoRecurrente } | null;
-
-const FREQUENCIES: { value: Frecuencia; label: string }[] = [
-  { value: 'semanal', label: 'Semanal' },
-  { value: 'quincenal', label: 'Quincenal' },
-  { value: 'mensual', label: 'Mensual' },
-];
-
-const FREQUENCY_LABELS: Record<Frecuencia, string> = {
-  semanal: 'Semanal',
-  quincenal: 'Quincenal',
-  mensual: 'Mensual',
-};
-
-function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : 'Ocurrió un error inesperado.';
-}
+type Confirmation = { schedule: MovimientoRecurrente; amount: number | null } | null;
+/** `scheduleId` es null cuando el error viene del formulario. */
+type ActionError = { scheduleId: string | null; message: string } | null;
 
 export function RecurringScreen() {
-  const { expenses, loading, error, reload } = useRecurringExpenses();
-  const {
-    categories,
-    loading: categoriesLoading,
-    error: categoriesError,
-    reload: reloadCategories,
-  } = useCategories('gasto');
+  const { schedules, loading, error, reload } = useRecurringMovements();
+  const expenseCategories = useCategories('gasto');
+  const incomeCategories = useCategories('ingreso');
   const [form, setForm] = useState<FormState | null>(null);
-  const [formError, setFormError] = useState<string | null>(null);
-  const [actionError, setActionError] = useState<string | null>(null);
-  const [saving, setSaving] = useState(false);
+  const [confirmation, setConfirmation] = useState<Confirmation>(null);
   const [pendingAction, setPendingAction] = useState<PendingAction>(null);
-  const [confirming, setConfirming] = useState<{ schedule: MovimientoRecurrente; amount: number | null } | null>(
-    null,
+  const [actionError, setActionError] = useState<ActionError>(null);
+  const [saving, setSaving] = useState(false);
+
+  const categoryNames = new Map(
+    [...expenseCategories.categories, ...incomeCategories.categories].map((c) => [c.id, c.nombre]),
   );
-  const categoryNames = useMemo(() => new Map(categories.map((category) => [category.id, category.nombre])), [categories]);
-  const currentDate = todayIso();
-  const activeExpenses = expenses.filter((expense) => expense.activo);
-  const pausedExpenses = expenses.filter((expense) => !expense.activo);
+  const categoriesError = expenseCategories.error ?? incomeCategories.error;
+  const today = todayIso();
+  const busy = saving || form !== null || confirmation !== null || pendingAction !== null;
+  const activeSchedules = schedules.filter((s) => s.activo);
+  const pausedSchedules = schedules.filter((s) => !s.activo);
 
-  function openCreateForm() {
-    setActionError(null);
-    setFormError(null);
-    setForm({
-      mode: 'create',
-      schedule: null,
-      amount: null,
-      categoryId: null,
-      frequency: 'mensual',
-      startDate: currentDate,
-      description: '',
-    });
-  }
-
-  function openEditForm(schedule: MovimientoRecurrente) {
-    setActionError(null);
-    setFormError(null);
-    setForm({
-      mode: 'edit',
-      schedule,
-      amount: schedule.monto_esperado,
-      categoryId: schedule.categoria_id,
-      frequency: schedule.frecuencia,
-      startDate: schedule.fecha_inicio,
-      description: schedule.descripcion ?? '',
-    });
-  }
-
-  async function performAction(operation: () => Promise<unknown>, onSuccess?: () => void) {
+  /** Ejecuta una operación y recarga la lista, tanto si funciona como si falla. */
+  async function runAction(operation: () => Promise<unknown>, scheduleId: string | null): Promise<boolean> {
     setSaving(true);
     setActionError(null);
+    let succeeded = false;
     try {
       await operation();
-      onSuccess?.();
-      await reload();
+      succeeded = true;
     } catch (operationError) {
-      setActionError(errorMessage(operationError));
-    } finally {
-      setSaving(false);
+      setActionError({ scheduleId, message: getErrorMessage(operationError) });
     }
+    await reload();
+    setSaving(false);
+    return succeeded;
+  }
+
+  function openForm(schedule: MovimientoRecurrente | null) {
+    setActionError(null);
+    setForm({
+      schedule,
+      type: schedule?.tipo ?? 'gasto',
+      amount: schedule?.monto_esperado ?? null,
+      categoryId: schedule?.categoria_id ?? null,
+      frequency: schedule?.frecuencia ?? 'mensual',
+      startDate: schedule?.fecha_inicio ?? today,
+      description: schedule?.descripcion ?? '',
+    });
   }
 
   async function saveForm() {
-    if (!form) return;
-    if (!isPositiveAmount(form.amount)) {
-      setFormError('Ingresa un monto mayor que cero.');
-      return;
-    }
-    if (!form.categoryId) {
-      setFormError('Selecciona una categoría.');
-      return;
-    }
+    if (!form || !form.categoryId || !isPositiveAmount(form.amount)) return;
 
-    setFormError(null);
-    const description = form.description.trim() || null;
-    const commonFields = {
+    const { schedule, type, startDate } = form;
+    const fields = {
       categoria_id: form.categoryId,
       monto_esperado: form.amount,
       frecuencia: form.frequency,
-      descripcion: description,
+      descripcion: form.description.trim() || null,
     };
-
-    if (form.mode === 'create') {
-      const input: RecurringExpenseInput = {
-        ...commonFields,
-        fecha_inicio: form.startDate,
-        proxima_fecha: form.startDate,
-      };
-      await performAction(() => createRecurringExpense(input), () => setForm(null));
-      return;
-    }
-
-    if (!form.schedule) return;
-    const schedule = form.schedule;
-    const input: RecurringExpenseUpdate = commonFields;
-    await performAction(() => updateRecurringExpense(schedule.id, input), () => setForm(null));
-  }
-
-  async function resolveOccurrence(schedule: MovimientoRecurrente, action: RecurringExpenseAction, amount: number | null) {
-    await performAction(
-      () => resolveRecurringExpenseOccurrence(schedule, action, amount),
-      () => {
-        setConfirming(null);
-        setPendingAction(null);
-      },
+    const succeeded = await runAction(
+      () =>
+        schedule
+          ? updateRecurring(schedule.id, fields)
+          : createRecurring({ ...fields, tipo: type, fecha_inicio: startDate, proxima_fecha: startDate }),
+      null,
     );
+    if (succeeded) setForm(null);
   }
 
-  async function confirmPendingAction() {
+  // La confirmación se cierra aunque falle: la ocurrencia pudo cambiar y no debe
+  // reintentarse sobre la siguiente fecha sin que el usuario la revise.
+  async function confirmOccurrence() {
+    if (!confirmation) return;
+    const { schedule, amount } = confirmation;
+    await runAction(() => resolveRecurringOccurrence(schedule, 'confirmar', amount), schedule.id);
+    setConfirmation(null);
+  }
+
+  async function runPendingAction() {
     if (!pendingAction) return;
-
-    if (pendingAction.type === 'skip') {
-      await resolveOccurrence(pendingAction.schedule, 'omitir', null);
-      return;
-    }
-
-    await performAction(() => deleteRecurringExpense(pendingAction.schedule.id), () => setPendingAction(null));
+    const { type, schedule } = pendingAction;
+    await runAction(
+      () => (type === 'skip' ? resolveRecurringOccurrence(schedule, 'omitir', null) : deleteRecurring(schedule.id)),
+      schedule.id,
+    );
+    setPendingAction(null);
   }
 
-  function renderExpense(schedule: MovimientoRecurrente) {
-    const isDue = schedule.proxima_fecha <= currentDate;
-    const showConfirmation = confirming?.schedule.id === schedule.id;
-    const status = !schedule.activo
-      ? 'Pausado'
-      : schedule.proxima_fecha < currentDate
-        ? 'Vencido'
-        : schedule.proxima_fecha === currentDate
-          ? 'Pendiente hoy'
-          : 'Próximo';
-    const actionsDisabled = saving || form !== null || pendingAction !== null || confirming !== null;
+  function renderSchedule(schedule: MovimientoRecurrente) {
     return (
-      <Card key={schedule.id}>
-        <ListItem
-          title={categoryNames.get(schedule.categoria_id) ?? 'Gasto recurrente'}
-          subtitle={`${status} · ${formatDate(schedule.proxima_fecha)} · ${FREQUENCY_LABELS[schedule.frecuencia]}`}
-          rightText={formatCurrency(schedule.monto_esperado)}
-        />
-        {schedule.descripcion ? (
-          <ThemedText themeColor="textSecondary">{schedule.descripcion}</ThemedText>
-        ) : null}
-        <View style={styles.actions}>
-          <Button
-            label="Editar"
-            variant="secondary"
-            onPress={() => openEditForm(schedule)}
-            disabled={actionsDisabled}
-          />
-          <Button
-            label={schedule.activo ? 'Pausar' : 'Reanudar'}
-            variant="secondary"
-            onPress={() => void performAction(() => setRecurringExpenseActive(schedule.id, !schedule.activo))}
-            disabled={actionsDisabled}
-          />
-          <Button
-            label="Eliminar"
-            variant="danger"
-            onPress={() => setPendingAction({ type: 'delete', schedule })}
-            disabled={actionsDisabled}
-          />
-        </View>
-        {schedule.activo && isDue ? (
-          <View style={styles.actions}>
-            <Button
-              label="Confirmar ocurrencia"
-              onPress={() => {
-                setActionError(null);
-                setConfirming({ schedule, amount: schedule.monto_esperado });
-              }}
-              disabled={actionsDisabled}
-            />
-            <Button
-              label="Omitir"
-              variant="secondary"
-              onPress={() => setPendingAction({ type: 'skip', schedule })}
-              disabled={actionsDisabled}
-            />
-          </View>
-        ) : null}
-        {showConfirmation && confirming ? (
-          <View style={styles.confirmForm}>
-            <ThemedText type="smallBold">Confirmar gasto del {formatDate(schedule.proxima_fecha)}</ThemedText>
-            <ThemedText themeColor="textSecondary">
-              Se registrará el monto real como un gasto y se programará la siguiente fecha.
-            </ThemedText>
-            <MoneyInput
-              label="Monto real"
-              value={confirming.amount}
-              onChange={(amount) => setConfirming({ ...confirming, amount })}
-              error={confirming.amount !== null && !isPositiveAmount(confirming.amount) ? 'El monto debe ser mayor que cero.' : undefined}
-            />
-            {actionError ? <ErrorState message={actionError} /> : null}
-            <Button
-              label="Guardar gasto"
-              onPress={() => void resolveOccurrence(schedule, 'confirmar', confirming.amount)}
-              loading={saving}
-              disabled={!isPositiveAmount(confirming.amount)}
-            />
-            <Button
-              label="Cancelar"
-              variant="secondary"
-              onPress={() => {
-                setConfirming(null);
-                setActionError(null);
-              }}
-              disabled={saving}
-            />
-          </View>
-        ) : null}
-      </Card>
+      <RecurringCard
+        key={schedule.id}
+        schedule={schedule}
+        categoryName={categoryNames.get(schedule.categoria_id)}
+        today={today}
+        confirmation={confirmation?.schedule.id === schedule.id ? confirmation : undefined}
+        disabled={busy}
+        saving={saving}
+        error={actionError?.scheduleId === schedule.id ? actionError.message : null}
+        onEdit={() => openForm(schedule)}
+        onToggleActive={() => void runAction(() => setRecurringActive(schedule.id, !schedule.activo), schedule.id)}
+        onDelete={() => setPendingAction({ type: 'delete', schedule })}
+        onSkip={() => setPendingAction({ type: 'skip', schedule })}
+        onStartConfirm={() => {
+          setActionError(null);
+          setConfirmation({ schedule, amount: schedule.monto_esperado });
+        }}
+        onAmountChange={(amount) => setConfirmation((current) => current && { ...current, amount })}
+        onConfirm={() => void confirmOccurrence()}
+        onCancelConfirm={() => setConfirmation(null)}
+      />
     );
   }
 
   return (
     <ScreenContainer scroll>
-      <ThemedText type="title">Gastos recurrentes</ThemedText>
+      <ThemedText type="title">Movimientos recurrentes</ThemedText>
       <ThemedText themeColor="textSecondary">
-        Programa gastos que se repiten. Solo al confirmar una ocurrencia se registra como movimiento real.
+        Programa ingresos y gastos que se repiten. Solo al confirmar una ocurrencia se registra como movimiento real.
       </ThemedText>
-      <Button
-        label="Programar gasto"
-        onPress={openCreateForm}
-        disabled={saving || form !== null || confirming !== null || pendingAction !== null}
-      />
-      {actionError && !confirming ? <ErrorState message={actionError} /> : null}
+      <Button label="Programar movimiento" onPress={() => openForm(null)} disabled={busy} />
 
       {form ? (
-        <Card>
-          <ThemedText type="subtitle">{form.mode === 'create' ? 'Nuevo gasto' : 'Editar gasto recurrente'}</ThemedText>
-          {categoriesError ? <ErrorState message={categoriesError} onRetry={() => void reloadCategories()} /> : null}
-          {categoriesLoading ? <LoadingState message="Cargando categorías" /> : null}
-          {!categoriesLoading && !categoriesError && categories.length === 0 ? (
-            <EmptyState message="No hay categorías de gastos disponibles." />
-          ) : null}
-          <MoneyInput
-            label="Monto esperado"
-            value={form.amount}
-            onChange={(amount) => setForm({ ...form, amount })}
-            error={formError && !isPositiveAmount(form.amount) ? formError : undefined}
-          />
-          {!categoriesLoading && !categoriesError && categories.length > 0 ? (
-            <CategoryPicker
-              categories={categories}
-              value={form.categoryId}
-              onChange={(categoryId) => {
-                setForm({ ...form, categoryId });
-                setFormError(null);
-              }}
-              error={formError && !form.categoryId ? formError : undefined}
-            />
-          ) : null}
-          <FrequencySelector
-            value={form.frequency}
-            onChange={(frequency) => setForm({ ...form, frequency })}
-          />
-          {form.mode === 'create' ? (
-            <DatePickerField
-              label="Primera fecha programada"
-              value={form.startDate}
-              onChange={(startDate) => setForm({ ...form, startDate })}
-            />
-          ) : (
-            <ThemedText themeColor="textSecondary">
-              Primera fecha: {formatDate(form.startDate)}. La fecha de inicio no cambia al editar.
-            </ThemedText>
-          )}
-          <TextField
-            label="Descripción (opcional)"
-            value={form.description}
-            onChangeText={(description) => setForm({ ...form, description })}
-            placeholder="Ej. Renta"
-            maxLength={200}
-          />
-          {formError && form.categoryId && isPositiveAmount(form.amount) ? (
-            <ThemedText style={styles.errorText}>{formError}</ThemedText>
-          ) : null}
-          {actionError ? <ErrorState message={actionError} /> : null}
-          <Button
-            label={form.mode === 'create' ? 'Guardar programación' : 'Guardar cambios'}
-            onPress={() => void saveForm()}
-            loading={saving}
-            disabled={
-              saving ||
-              categoriesLoading ||
-              categories.length === 0 ||
-              !form.categoryId ||
-              !isPositiveAmount(form.amount)
-            }
-          />
-          <Button
-            label="Cancelar"
-            variant="secondary"
-            onPress={() => {
-              setForm(null);
-              setFormError(null);
-              setActionError(null);
-            }}
-            disabled={saving}
-          />
-        </Card>
+        <RecurringForm
+          form={form}
+          onChange={setForm}
+          onSave={() => void saveForm()}
+          onCancel={() => {
+            setForm(null);
+            setActionError(null);
+          }}
+          saving={saving}
+          error={actionError?.scheduleId === null ? actionError.message : null}
+        />
       ) : null}
 
-      {loading && expenses.length === 0 ? <LoadingState message="Cargando gastos recurrentes" /> : null}
-      {error ? <ErrorState message={error} onRetry={() => void reload()} /> : null}
-      {!loading && !error && expenses.length === 0 ? (
-        <EmptyState message="Todavía no tienes gastos recurrentes programados." />
+      {categoriesError ? (
+        <ErrorState
+          message={categoriesError}
+          onRetry={() => {
+            void expenseCategories.reload();
+            void incomeCategories.reload();
+          }}
+        />
       ) : null}
-      {activeExpenses.length > 0 ? (
+      {/* Si la programación ya no está en la lista, su error se muestra aquí. */}
+      {actionError?.scheduleId && !schedules.some((s) => s.id === actionError.scheduleId) ? (
+        <ErrorState message={actionError.message} />
+      ) : null}
+      {loading && schedules.length === 0 ? <LoadingState message="Cargando movimientos recurrentes" /> : null}
+      {error ? <ErrorState message={error} onRetry={() => void reload()} /> : null}
+      {!loading && !error && schedules.length === 0 ? (
+        <EmptyState message="Todavía no tienes movimientos recurrentes programados." />
+      ) : null}
+      {activeSchedules.length > 0 ? (
         <>
           <ThemedText type="subtitle">Activos</ThemedText>
-          {activeExpenses.map(renderExpense)}
+          {activeSchedules.map(renderSchedule)}
         </>
       ) : null}
-      {pausedExpenses.length > 0 ? (
+      {pausedSchedules.length > 0 ? (
         <>
           <ThemedText type="subtitle">Pausados</ThemedText>
-          {pausedExpenses.map(renderExpense)}
+          {pausedSchedules.map(renderSchedule)}
         </>
       ) : null}
 
@@ -385,43 +196,15 @@ export function RecurringScreen() {
         title={pendingAction?.type === 'skip' ? '¿Omitir esta ocurrencia?' : '¿Eliminar esta programación?'}
         message={
           pendingAction?.type === 'skip'
-            ? `No se creará un gasto y la siguiente fecha será calculada desde ${formatDate(pendingAction.schedule.proxima_fecha)}.${actionError ? `\n${actionError}` : ''}`
-            : `Los gastos confirmados se conservarán.${actionError ? `\n${actionError}` : ''}`
+            ? `No se creará un movimiento. La siguiente fecha se calculará desde ${formatDate(pendingAction.schedule.proxima_fecha)}.`
+            : 'La programación se eliminará. No se puede eliminar si ya tiene movimientos confirmados.'
         }
         confirmLabel={pendingAction?.type === 'skip' ? 'Omitir' : 'Eliminar'}
         destructive={pendingAction?.type === 'delete'}
         loading={saving}
-        onConfirm={() => void confirmPendingAction()}
-        onCancel={() => {
-          setPendingAction(null);
-          setActionError(null);
-        }}
+        onConfirm={() => void runPendingAction()}
+        onCancel={() => setPendingAction(null)}
       />
     </ScreenContainer>
   );
 }
-
-function FrequencySelector({ value, onChange }: { value: Frecuencia; onChange: (value: Frecuencia) => void }) {
-  return (
-    <View style={styles.frequencySelector}>
-      <ThemedText type="smallBold">Frecuencia</ThemedText>
-      <View style={styles.actions}>
-        {FREQUENCIES.map((frequency) => (
-          <Button
-            key={frequency.value}
-            label={frequency.label}
-            variant={value === frequency.value ? 'primary' : 'secondary'}
-            onPress={() => onChange(frequency.value)}
-          />
-        ))}
-      </View>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  actions: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 8 },
-  confirmForm: { gap: 10, marginTop: 8 },
-  frequencySelector: { gap: 6 },
-  errorText: { color: '#DC2626' },
-});

@@ -14,7 +14,7 @@ La base del equipo ya está creada en Supabase (la configuró el Integrante 1, q
 | `0001_init.sql` | Crea todo el esquema. Ejecutar una sola vez en un proyecto vacío |
 | `0003_dinero_disponible.sql` | Crea la función `dinero_disponible()` (RF-06). Ejecutar después de `0001` |
 | `0002_iconos_a_claves.sql` | **Solo si ya ejecutaste un `0001` antiguo** con emojis: los convierte en claves. Es seguro ejecutarlo de todos modos |
-| `0004_resolver_gasto_recurrente.sql` | Añade la RPC transaccional para confirmar u omitir gastos recurrentes. Aplicar después de `0001` |
+| `0004_resolver_movimiento_recurrente.sql` | Crea la función transaccional para confirmar u omitir ingresos y gastos recurrentes (RF-05). Ejecutar después de `0001` |
 
 ## Cómo aplicarlo
 
@@ -104,5 +104,6 @@ erDiagram
 
 ## Pendiente (a coordinar con el Integrante 1)
 
-- Aplicar `0004_resolver_gasto_recurrente.sql` a la base compartida y comprobar sus permisos y comportamiento con dos sesiones. La RPC usa las políticas RLS existentes; no cambia tablas ni políticas.
+- Aplicar `0004_resolver_movimiento_recurrente.sql` a la base compartida y probar confirmar y omitir (T-08 a T-12) con un ingreso y un gasto. La función usa las políticas RLS existentes; no cambia tablas ni políticas.
+- No se puede borrar una programación con movimientos confirmados: `on delete set null` choca con el `check` que exige el vínculo cuando `origen = 'recurrente'` (según el SQL de `0001`; sin probar en la base). La app lo impide y sugiere pausarla.
 - Un presupuesto por categoría debería apuntar solo a categorías de tipo `gasto`; hoy solo lo valida la app.
