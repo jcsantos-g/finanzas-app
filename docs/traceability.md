@@ -12,7 +12,7 @@ Estados: ⬜ pendiente · 🟨 en progreso · ✅ terminado
 | RF-03 | Gestión de gastos | Integrante 2 | `src/features/transactions` | ⬜ |
 | RF-04 | Dashboard (menú de tarjetas + dinero disponible; decisión del equipo) | Integrante 1 | `src/features/dashboard` | ✅ |
 | — | Componentes compartidos y categorías (base para RF-02/03/05/07) | Integrante 1 | `src/components/ui`, `src/features/categories` | ✅ (ver `docs/components.md`) |
-| RF-05 | Movimientos recurrentes | Integrante 3 (completado con apoyo del Integrante 1) | `src/features/recurring`, `0004_resolver_movimiento_recurrente.sql` | 🟨 implementado; falta aplicar `0004` y probar con Supabase |
+| RF-05 | Movimientos recurrentes | Integrante 3 (completado con apoyo del Integrante 1) | `src/features/recurring`, `0004_resolver_movimiento_recurrente.sql` | 🟨 pasa T-08 a T-12 en web; falta probar en teléfono o emulador |
 | RF-06 | Dinero disponible | Integrante 1 | `src/features/balance`, `0003_dinero_disponible.sql` | ✅ probado por el Integrante 1 (T-16) |
 | RF-07 | Presupuestos | Integrante 3 | `src/features/budgets` | ⬜ |
 | RF-08 | Reportes básicos | Integrante 4 | `src/features/reports` | ⬜ |
