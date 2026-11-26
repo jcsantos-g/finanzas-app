@@ -35,6 +35,10 @@ Ejecutar en un dispositivo real o emulador. Marcar con la fecha y el nombre de q
 | T-15 | **Aislamiento (RLS)** | Con la cuenta A crear datos; entrar con la cuenta B | B no ve nada de A | ✅ | Juan Carlos Santos / 2026-11-25 |
 | T-16 | Dinero disponible | Registrar un ingreso y un gasto; volver al Dashboard | Muestra ingresos menos gastos; los recurrentes pendientes no cuentan | ✅ | Juan Carlos Santos / 2026-11-25 |
 
+### Gastos recurrentes
+
+La pantalla y el servicio están implementados. Antes de marcar T-08 a T-12 como terminados, aplicar `0004_resolver_gasto_recurrente.sql` a un proyecto de prueba y ejecutar los casos en un dispositivo o emulador.
+
 ## Registro de errores
 
 | # | Descripción | Módulo | Encontrado por | Estado |

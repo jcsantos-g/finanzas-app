@@ -14,6 +14,7 @@ La base del equipo ya está creada en Supabase (la configuró el Integrante 1, q
 | `0001_init.sql` | Crea todo el esquema. Ejecutar una sola vez en un proyecto vacío |
 | `0003_dinero_disponible.sql` | Crea la función `dinero_disponible()` (RF-06). Ejecutar después de `0001` |
 | `0002_iconos_a_claves.sql` | **Solo si ya ejecutaste un `0001` antiguo** con emojis: los convierte en claves. Es seguro ejecutarlo de todos modos |
+| `0004_resolver_gasto_recurrente.sql` | Añade la RPC transaccional para confirmar u omitir gastos recurrentes. Aplicar después de `0001` |
 
 ## Cómo aplicarlo
 
@@ -101,7 +102,7 @@ erDiagram
 | Movimientos sin `on delete cascade` hacia categorías | No se puede borrar una categoría que ya tiene movimientos. Al borrar un usuario se elimina todo en cascada |
 | Totales y saldo **no se guardan** | Se calculan desde `movimientos`, así nunca quedan desactualizados |
 
-## Pendiente (a coordinar con el Integrante 3)
+## Pendiente (a coordinar con el Integrante 1)
 
-- La confirmación/omisión de recurrentes puede implementarse en el cliente (insertar el movimiento y actualizar `proxima_fecha`) o como función SQL (RPC) para que sea atómica. Si se hace en el cliente, la restricción única ya protege contra duplicados, pero un fallo entre los dos pasos dejaría la fecha sin avanzar.
+- Aplicar `0004_resolver_gasto_recurrente.sql` a la base compartida y comprobar sus permisos y comportamiento con dos sesiones. La RPC usa las políticas RLS existentes; no cambia tablas ni políticas.
 - Un presupuesto por categoría debería apuntar solo a categorías de tipo `gasto`; hoy solo lo valida la app.
