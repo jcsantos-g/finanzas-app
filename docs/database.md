@@ -104,6 +104,6 @@ erDiagram
 
 ## Pendiente (a coordinar con el Integrante 1)
 
-- `0004_resolver_movimiento_recurrente.sql` ya está aplicada en la base compartida (2026-11-25); confirmar y omitir funcionan en la versión web.
+- `0004_resolver_movimiento_recurrente.sql` ya está aplicada en la base compartida (2026-11-25); confirmar y omitir funcionan en la versión web y en Android.
 - No se puede borrar una programación con movimientos confirmados: `on delete set null` choca con el `check` que exige el vínculo cuando `origen = 'recurrente'` (según el SQL de `0001`; sin probar en la base). La app lo impide y sugiere pausarla.
 - Un presupuesto por categoría debería apuntar solo a categorías de tipo `gasto`; hoy solo lo valida la app.
