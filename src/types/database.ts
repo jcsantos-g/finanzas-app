@@ -10,6 +10,8 @@ export type TipoMovimiento = 'ingreso' | 'gasto';
 export type OrigenMovimiento = 'manual' | 'recurrente' | 'ia';
 export type Frecuencia = 'semanal' | 'quincenal' | 'mensual';
 
+// Las filas deben ser `type`: con `interface`, Supabase tipa las tablas como `never`.
+
 /** Tabla `categorias`. */
 export type Categoria = {
   id: string;
@@ -112,7 +114,11 @@ export interface Database {
         Args: Record<string, never>;
         Returns: number;
       };
+<<<<<<< HEAD
       /** Confirma u omite una ocurrencia y avanza su fecha de forma atómica (0005). */
+=======
+      /** Confirma u omite una ocurrencia (ingreso o gasto) y avanza su fecha de forma atómica (0004). */
+>>>>>>> cbb80e1aeb902a56a30ae7daa779bb08ee67af77
       resolver_movimiento_recurrente: {
         Args: {
           p_accion: 'confirmar' | 'omitir';

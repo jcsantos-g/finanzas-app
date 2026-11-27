@@ -1,5 +1,9 @@
--- Confirma u omite una ocurrencia de gasto y avanza su fecha en una transacción.
-create or replace function public.resolver_gasto_recurrente(
+-- Confirma u omite una ocurrencia (ingreso o gasto) y avanza su fecha en una transacción.
+
+-- Elimina la versión anterior, que solo admitía gastos (no hace nada si nunca se aplicó).
+drop function if exists public.resolver_gasto_recurrente(uuid, date, date, text, numeric, date);
+
+create or replace function public.resolver_movimiento_recurrente(
   p_movimiento_recurrente_id uuid,
   p_fecha_programada date,
   p_proxima_fecha date,
@@ -35,12 +39,11 @@ begin
     from public.movimientos_recurrentes
    where id = p_movimiento_recurrente_id
      and usuario_id = (select auth.uid())
-     and tipo = 'gasto'
      and activo
    for update;
 
   if not found then
-    raise exception 'No se encontró un gasto recurrente activo para este usuario.';
+    raise exception 'No se encontró un movimiento recurrente activo para este usuario.';
   end if;
 
   if v_schedule.proxima_fecha <> p_fecha_programada then
@@ -81,7 +84,7 @@ begin
     values (
       v_schedule.usuario_id,
       v_schedule.categoria_id,
-      'gasto',
+      v_schedule.tipo,
       p_monto,
       p_fecha_real,
       v_schedule.descripcion,
@@ -100,8 +103,8 @@ begin
 end;
 $$;
 
-revoke all on function public.resolver_gasto_recurrente(uuid, date, date, text, numeric, date) from public, anon;
-grant execute on function public.resolver_gasto_recurrente(uuid, date, date, text, numeric, date) to authenticated;
+revoke all on function public.resolver_movimiento_recurrente(uuid, date, date, text, numeric, date) from public, anon;
+grant execute on function public.resolver_movimiento_recurrente(uuid, date, date, text, numeric, date) to authenticated;
 
-comment on function public.resolver_gasto_recurrente(uuid, date, date, text, numeric, date) is
-  'Confirma u omite una ocurrencia de gasto recurrente, validando la fecha y avanzando la programación de forma atómica.';
+comment on function public.resolver_movimiento_recurrente(uuid, date, date, text, numeric, date) is
+  'Confirma u omite una ocurrencia de un movimiento recurrente (ingreso o gasto), validando la fecha y avanzando la programación de forma atómica.';
