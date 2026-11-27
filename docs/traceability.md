@@ -12,7 +12,7 @@ Estados: ⬜ pendiente · 🟨 en progreso · ✅ terminado
 | RF-03 | Gestión de gastos | Integrante 2 | `src/features/transactions` | ⬜ |
 | RF-04 | Dashboard (menú de tarjetas + dinero disponible; decisión del equipo) | Integrante 1 | `src/features/dashboard` | ✅ |
 | — | Componentes compartidos y categorías (base para RF-02/03/05/07) | Integrante 1 | `src/components/ui`, `src/features/categories` | ✅ (ver `docs/components.md`) |
-| RF-05 | Gastos recurrentes (programar, editar, pausar, confirmar y omitir) | Integrante 3 | `src/features/recurring`, `0004_resolver_gasto_recurrente.sql` | 🟨 implementación lista; falta aplicar RPC y probar con Supabase |
+| RF-05 | Ingresos y gastos recurrentes (programar, editar, pausar, confirmar y omitir) | Integrante 3 | `src/features/recurring`, `0005_resolver_movimiento_recurrente.sql` | 🟨 implementación lista; falta aplicar RPC y probar con Supabase |
 | RF-06 | Dinero disponible | Integrante 1 | `src/features/balance`, `0003_dinero_disponible.sql` | ✅ probado por el Integrante 1 (T-16) |
 | RF-07 | Presupuestos | Integrante 3 | `src/features/budgets` | ⬜ |
 | RF-08 | Reportes básicos | Integrante 4 | `src/features/reports` | ⬜ |

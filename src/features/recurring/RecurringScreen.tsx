@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
+import { Palette } from '@/constants/theme';
 import {
   Button,
   Card,
@@ -18,23 +19,28 @@ import {
 } from '@/components/ui';
 import { useCategories } from '@/features/categories/useCategories';
 import {
-  createRecurringExpense,
-  deleteRecurringExpense,
-  resolveRecurringExpenseOccurrence,
-  setRecurringExpenseActive,
-  updateRecurringExpense,
+  createRecurringMovement,
+  deleteRecurringMovement,
+  resolveRecurringMovementOccurrence,
+  setRecurringMovementActive,
+  updateRecurringMovement,
 } from '@/features/recurring/service';
-import type { RecurringExpenseAction, RecurringExpenseInput, RecurringExpenseUpdate } from '@/features/recurring/types';
+import type {
+  RecurringMovementAction,
+  RecurringMovementInput,
+  RecurringMovementUpdate,
+} from '@/features/recurring/types';
 import { formatCurrency, formatDate } from '@/lib/formatters';
 import { todayIso } from '@/lib/dates';
 import { isPositiveAmount } from '@/lib/validators';
-import type { Frecuencia, MovimientoRecurrente } from '@/types/database';
+import type { Frecuencia, MovimientoRecurrente, TipoMovimiento } from '@/types/database';
 
-import { useRecurringExpenses } from './useRecurringExpenses';
+import { useRecurringMovements } from './useRecurringMovements';
 
 type FormState = {
   mode: 'create' | 'edit';
   schedule: MovimientoRecurrente | null;
+  type: TipoMovimiento;
   amount: number | null;
   categoryId: string | null;
   frequency: Frecuencia;
@@ -61,13 +67,9 @@ function errorMessage(error: unknown): string {
 }
 
 export function RecurringScreen() {
-  const { expenses, loading, error, reload } = useRecurringExpenses();
-  const {
-    categories,
-    loading: categoriesLoading,
-    error: categoriesError,
-    reload: reloadCategories,
-  } = useCategories('gasto');
+  const { movements, loading, error, reload } = useRecurringMovements();
+  const incomeCategoriesState = useCategories('ingreso');
+  const expenseCategoriesState = useCategories('gasto');
   const [form, setForm] = useState<FormState | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
@@ -76,10 +78,21 @@ export function RecurringScreen() {
   const [confirming, setConfirming] = useState<{ schedule: MovimientoRecurrente; amount: number | null } | null>(
     null,
   );
-  const categoryNames = useMemo(() => new Map(categories.map((category) => [category.id, category.nombre])), [categories]);
+  const categoryNames = useMemo(
+    () =>
+      new Map(
+        [...incomeCategoriesState.categories, ...expenseCategoriesState.categories].map((category) => [
+          category.id,
+          category.nombre,
+        ]),
+      ),
+    [incomeCategoriesState.categories, expenseCategoriesState.categories],
+  );
   const currentDate = todayIso();
-  const activeExpenses = expenses.filter((expense) => expense.activo);
-  const pausedExpenses = expenses.filter((expense) => !expense.activo);
+  const activeMovements = movements.filter((movement) => movement.activo);
+  const pausedMovements = movements.filter((movement) => !movement.activo);
+  const selectedCategoriesState =
+    form?.type === 'ingreso' ? incomeCategoriesState : expenseCategoriesState;
 
   function openCreateForm() {
     setActionError(null);
@@ -87,6 +100,7 @@ export function RecurringScreen() {
     setForm({
       mode: 'create',
       schedule: null,
+      type: 'gasto',
       amount: null,
       categoryId: null,
       frequency: 'mensual',
@@ -101,6 +115,7 @@ export function RecurringScreen() {
     setForm({
       mode: 'edit',
       schedule,
+      type: schedule.tipo,
       amount: schedule.monto_esperado,
       categoryId: schedule.categoria_id,
       frequency: schedule.frecuencia,
@@ -144,24 +159,29 @@ export function RecurringScreen() {
     };
 
     if (form.mode === 'create') {
-      const input: RecurringExpenseInput = {
+      const input: RecurringMovementInput = {
         ...commonFields,
+        tipo: form.type,
         fecha_inicio: form.startDate,
         proxima_fecha: form.startDate,
       };
-      await performAction(() => createRecurringExpense(input), () => setForm(null));
+      await performAction(() => createRecurringMovement(input), () => setForm(null));
       return;
     }
 
     if (!form.schedule) return;
     const schedule = form.schedule;
-    const input: RecurringExpenseUpdate = commonFields;
-    await performAction(() => updateRecurringExpense(schedule.id, input), () => setForm(null));
+    const input: RecurringMovementUpdate = commonFields;
+    await performAction(() => updateRecurringMovement(schedule.id, schedule.tipo, input), () => setForm(null));
   }
 
-  async function resolveOccurrence(schedule: MovimientoRecurrente, action: RecurringExpenseAction, amount: number | null) {
+  async function resolveOccurrence(
+    schedule: MovimientoRecurrente,
+    action: RecurringMovementAction,
+    amount: number | null,
+  ) {
     await performAction(
-      () => resolveRecurringExpenseOccurrence(schedule, action, amount),
+      () => resolveRecurringMovementOccurrence(schedule, action, amount),
       () => {
         setConfirming(null);
         setPendingAction(null);
@@ -177,10 +197,13 @@ export function RecurringScreen() {
       return;
     }
 
-    await performAction(() => deleteRecurringExpense(pendingAction.schedule.id), () => setPendingAction(null));
+    await performAction(
+      () => deleteRecurringMovement(pendingAction.schedule.id, pendingAction.schedule.tipo),
+      () => setPendingAction(null),
+    );
   }
 
-  function renderExpense(schedule: MovimientoRecurrente) {
+  function renderMovement(schedule: MovimientoRecurrente) {
     const isDue = schedule.proxima_fecha <= currentDate;
     const showConfirmation = confirming?.schedule.id === schedule.id;
     const status = !schedule.activo
@@ -194,9 +217,10 @@ export function RecurringScreen() {
     return (
       <Card key={schedule.id}>
         <ListItem
-          title={categoryNames.get(schedule.categoria_id) ?? 'Gasto recurrente'}
+          title={categoryNames.get(schedule.categoria_id) ?? (schedule.tipo === 'ingreso' ? 'Ingreso recurrente' : 'Gasto recurrente')}
           subtitle={`${status} · ${formatDate(schedule.proxima_fecha)} · ${FREQUENCY_LABELS[schedule.frecuencia]}`}
           rightText={formatCurrency(schedule.monto_esperado)}
+          rightColor={schedule.tipo === 'ingreso' ? Palette.success : Palette.danger}
         />
         {schedule.descripcion ? (
           <ThemedText themeColor="textSecondary">{schedule.descripcion}</ThemedText>
@@ -211,7 +235,11 @@ export function RecurringScreen() {
           <Button
             label={schedule.activo ? 'Pausar' : 'Reanudar'}
             variant="secondary"
-            onPress={() => void performAction(() => setRecurringExpenseActive(schedule.id, !schedule.activo))}
+            onPress={() =>
+              void performAction(() =>
+                setRecurringMovementActive(schedule.id, schedule.tipo, !schedule.activo),
+              )
+            }
             disabled={actionsDisabled}
           />
           <Button
@@ -241,9 +269,11 @@ export function RecurringScreen() {
         ) : null}
         {showConfirmation && confirming ? (
           <View style={styles.confirmForm}>
-            <ThemedText type="smallBold">Confirmar gasto del {formatDate(schedule.proxima_fecha)}</ThemedText>
+            <ThemedText type="smallBold">
+              Confirmar {schedule.tipo === 'ingreso' ? 'ingreso' : 'gasto'} del {formatDate(schedule.proxima_fecha)}
+            </ThemedText>
             <ThemedText themeColor="textSecondary">
-              Se registrará el monto real como un gasto y se programará la siguiente fecha.
+              Se registrará el monto real y se programará la siguiente fecha.
             </ThemedText>
             <MoneyInput
               label="Monto real"
@@ -253,7 +283,7 @@ export function RecurringScreen() {
             />
             {actionError ? <ErrorState message={actionError} /> : null}
             <Button
-              label="Guardar gasto"
+              label={`Guardar ${schedule.tipo === 'ingreso' ? 'ingreso' : 'gasto'}`}
               onPress={() => void resolveOccurrence(schedule, 'confirmar', confirming.amount)}
               loading={saving}
               disabled={!isPositiveAmount(confirming.amount)}
@@ -275,12 +305,12 @@ export function RecurringScreen() {
 
   return (
     <ScreenContainer scroll>
-      <ThemedText type="title">Gastos recurrentes</ThemedText>
+      <ThemedText type="title">Movimientos recurrentes</ThemedText>
       <ThemedText themeColor="textSecondary">
-        Programa gastos que se repiten. Solo al confirmar una ocurrencia se registra como movimiento real.
+        Programa ingresos y gastos que se repiten. Solo al confirmar una ocurrencia se registra como movimiento real.
       </ThemedText>
       <Button
-        label="Programar gasto"
+        label="Programar movimiento"
         onPress={openCreateForm}
         disabled={saving || form !== null || confirming !== null || pendingAction !== null}
       />
@@ -288,11 +318,47 @@ export function RecurringScreen() {
 
       {form ? (
         <Card>
-          <ThemedText type="subtitle">{form.mode === 'create' ? 'Nuevo gasto' : 'Editar gasto recurrente'}</ThemedText>
-          {categoriesError ? <ErrorState message={categoriesError} onRetry={() => void reloadCategories()} /> : null}
-          {categoriesLoading ? <LoadingState message="Cargando categorías" /> : null}
-          {!categoriesLoading && !categoriesError && categories.length === 0 ? (
-            <EmptyState message="No hay categorías de gastos disponibles." />
+          <ThemedText type="subtitle">
+            {form.mode === 'create' ? 'Nueva programación' : 'Editar movimiento recurrente'}
+          </ThemedText>
+          {form.mode === 'create' ? (
+            <View style={styles.frequencySelector}>
+              <ThemedText type="smallBold">Tipo</ThemedText>
+              <View style={styles.actions}>
+                <Button
+                  label="Ingreso"
+                  variant={form.type === 'ingreso' ? 'primary' : 'secondary'}
+                  onPress={() => {
+                    setForm({ ...form, type: 'ingreso', categoryId: null });
+                    setFormError(null);
+                  }}
+                />
+                <Button
+                  label="Gasto"
+                  variant={form.type === 'gasto' ? 'primary' : 'secondary'}
+                  onPress={() => {
+                    setForm({ ...form, type: 'gasto', categoryId: null });
+                    setFormError(null);
+                  }}
+                />
+              </View>
+            </View>
+          ) : (
+            <ThemedText themeColor="textSecondary">
+              Tipo: {form.type === 'ingreso' ? 'Ingreso' : 'Gasto'} (no se puede cambiar al editar).
+            </ThemedText>
+          )}
+          {selectedCategoriesState.error ? (
+            <ErrorState
+              message={selectedCategoriesState.error}
+              onRetry={() => void selectedCategoriesState.reload()}
+            />
+          ) : null}
+          {selectedCategoriesState.loading ? <LoadingState message="Cargando categorías" /> : null}
+          {!selectedCategoriesState.loading &&
+          !selectedCategoriesState.error &&
+          selectedCategoriesState.categories.length === 0 ? (
+            <EmptyState message={`No hay categorías de ${form.type === 'ingreso' ? 'ingresos' : 'gastos'} disponibles.`} />
           ) : null}
           <MoneyInput
             label="Monto esperado"
@@ -300,9 +366,11 @@ export function RecurringScreen() {
             onChange={(amount) => setForm({ ...form, amount })}
             error={formError && !isPositiveAmount(form.amount) ? formError : undefined}
           />
-          {!categoriesLoading && !categoriesError && categories.length > 0 ? (
+          {!selectedCategoriesState.loading &&
+          !selectedCategoriesState.error &&
+          selectedCategoriesState.categories.length > 0 ? (
             <CategoryPicker
-              categories={categories}
+              categories={selectedCategoriesState.categories}
               value={form.categoryId}
               onChange={(categoryId) => {
                 setForm({ ...form, categoryId });
@@ -343,8 +411,9 @@ export function RecurringScreen() {
             loading={saving}
             disabled={
               saving ||
-              categoriesLoading ||
-              categories.length === 0 ||
+              selectedCategoriesState.loading ||
+              selectedCategoriesState.error !== null ||
+              selectedCategoriesState.categories.length === 0 ||
               !form.categoryId ||
               !isPositiveAmount(form.amount)
             }
@@ -362,31 +431,39 @@ export function RecurringScreen() {
         </Card>
       ) : null}
 
-      {loading && expenses.length === 0 ? <LoadingState message="Cargando gastos recurrentes" /> : null}
+      {loading && movements.length === 0 ? <LoadingState message="Cargando movimientos recurrentes" /> : null}
       {error ? <ErrorState message={error} onRetry={() => void reload()} /> : null}
-      {!loading && !error && expenses.length === 0 ? (
-        <EmptyState message="Todavía no tienes gastos recurrentes programados." />
+      {!loading && !error && movements.length === 0 ? (
+        <EmptyState message="Todavía no tienes movimientos recurrentes programados." />
       ) : null}
-      {activeExpenses.length > 0 ? (
-        <>
-          <ThemedText type="subtitle">Activos</ThemedText>
-          {activeExpenses.map(renderExpense)}
-        </>
-      ) : null}
-      {pausedExpenses.length > 0 ? (
-        <>
-          <ThemedText type="subtitle">Pausados</ThemedText>
-          {pausedExpenses.map(renderExpense)}
-        </>
-      ) : null}
+      {renderMovementGroup(
+        'Ingresos activos',
+        activeMovements.filter((movement) => movement.tipo === 'ingreso'),
+        renderMovement,
+      )}
+      {renderMovementGroup(
+        'Gastos activos',
+        activeMovements.filter((movement) => movement.tipo === 'gasto'),
+        renderMovement,
+      )}
+      {renderMovementGroup(
+        'Ingresos pausados',
+        pausedMovements.filter((movement) => movement.tipo === 'ingreso'),
+        renderMovement,
+      )}
+      {renderMovementGroup(
+        'Gastos pausados',
+        pausedMovements.filter((movement) => movement.tipo === 'gasto'),
+        renderMovement,
+      )}
 
       <ConfirmModal
         visible={pendingAction !== null}
         title={pendingAction?.type === 'skip' ? '¿Omitir esta ocurrencia?' : '¿Eliminar esta programación?'}
         message={
           pendingAction?.type === 'skip'
-            ? `No se creará un gasto y la siguiente fecha será calculada desde ${formatDate(pendingAction.schedule.proxima_fecha)}.${actionError ? `\n${actionError}` : ''}`
-            : `Los gastos confirmados se conservarán.${actionError ? `\n${actionError}` : ''}`
+            ? `No se creará un movimiento y la siguiente fecha será calculada desde ${formatDate(pendingAction.schedule.proxima_fecha)}.${actionError ? `\n${actionError}` : ''}`
+            : `Los movimientos confirmados se conservarán.${actionError ? `\n${actionError}` : ''}`
         }
         confirmLabel={pendingAction?.type === 'skip' ? 'Omitir' : 'Eliminar'}
         destructive={pendingAction?.type === 'delete'}
@@ -419,9 +496,24 @@ function FrequencySelector({ value, onChange }: { value: Frecuencia; onChange: (
   );
 }
 
+function renderMovementGroup(
+  title: string,
+  items: MovimientoRecurrente[],
+  renderItem: (schedule: MovimientoRecurrente) => ReactNode,
+) {
+  if (items.length === 0) return null;
+  return (
+    <View style={styles.group}>
+      <ThemedText type="subtitle">{title}</ThemedText>
+      {items.map(renderItem)}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 8 },
   confirmForm: { gap: 10, marginTop: 8 },
   frequencySelector: { gap: 6 },
+  group: { gap: 8 },
   errorText: { color: '#DC2626' },
 });

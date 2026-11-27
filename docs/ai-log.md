@@ -14,6 +14,7 @@ Objetivo del curso: evaluar la implementación de IA en el desarrollo. Cada inte
 | 2026-11-25 | 1 | Claude Code | Preparación del equipo y dinero disponible | Crear ramas e Issues; función SQL `dinero_disponible` y tarjeta en el Dashboard | _pendiente de calificar_ | La fusión a `main` la frenó el control de permisos de la herramienta y requirió autorización | _pendiente_ |
 | 2026-11-25 | 1 | Claude Code | Cierre de la base | Actualizar documentación, publicar la versión base en `main` y verificar un clon limpio | _pendiente de calificar_ | _pendiente_ | _pendiente_ |
 | 2026-11-25 | 3 | Copilot | Módulo de gastos recurrentes | Implementar programación, administración y resolución atómica de ocurrencias de gastos recurrentes | _pendiente de calificar_ | La RPC requiere aplicarse y probarse en Supabase | _pendiente_ |
+| 2026-11-26 | 3 | Copilot | Ingresos recurrentes | Ampliar el módulo y la RPC atómica para manejar ingresos y gastos recurrentes | _pendiente de calificar_ | La nueva migración requiere aplicarse y probarse en Supabase | _pendiente_ |
 
 ## Lecciones aprendidas
 

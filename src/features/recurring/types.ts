@@ -1,13 +1,13 @@
 import type { MovimientoRecurrente } from '@/types/database';
 
-export type RecurringExpenseInput = Pick<
+export type RecurringMovementInput = Pick<
   MovimientoRecurrente,
-  'categoria_id' | 'monto_esperado' | 'frecuencia' | 'fecha_inicio' | 'proxima_fecha' | 'descripcion'
+  'tipo' | 'categoria_id' | 'monto_esperado' | 'frecuencia' | 'fecha_inicio' | 'proxima_fecha' | 'descripcion'
 >;
 
-export type RecurringExpenseUpdate = Pick<
+export type RecurringMovementUpdate = Pick<
   MovimientoRecurrente,
   'categoria_id' | 'monto_esperado' | 'frecuencia' | 'descripcion'
 >;
 
-export type RecurringExpenseAction = 'confirmar' | 'omitir';
+export type RecurringMovementAction = 'confirmar' | 'omitir';

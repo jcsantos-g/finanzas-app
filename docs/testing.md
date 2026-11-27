@@ -34,10 +34,11 @@ Ejecutar en un dispositivo real o emulador. Marcar con la fecha y el nombre de q
 | T-14 | Reportes | Cambiar de mes | Totales y gráfico corresponden al mes | ⬜ | |
 | T-15 | **Aislamiento (RLS)** | Con la cuenta A crear datos; entrar con la cuenta B | B no ve nada de A | ✅ | Juan Carlos Santos / 2026-11-25 |
 | T-16 | Dinero disponible | Registrar un ingreso y un gasto; volver al Dashboard | Muestra ingresos menos gastos; los recurrentes pendientes no cuentan | ✅ | Juan Carlos Santos / 2026-11-25 |
+| T-17 | Ingreso recurrente | Programar y confirmar un ingreso recurrente vencido | Se crea un ingreso real y aumenta el dinero disponible | ⬜ | |
 
-### Gastos recurrentes
+### Movimientos recurrentes
 
-La pantalla y el servicio están implementados. Antes de marcar T-08 a T-12 como terminados, aplicar `0004_resolver_gasto_recurrente.sql` a un proyecto de prueba y ejecutar los casos en un dispositivo o emulador.
+La pantalla y el servicio admiten ingresos y gastos. Antes de marcar T-08 a T-12 y T-17 como terminados, aplicar `0005_resolver_movimiento_recurrente.sql` a un proyecto de prueba y ejecutar los casos en un dispositivo o emulador.
 
 ## Registro de errores
 

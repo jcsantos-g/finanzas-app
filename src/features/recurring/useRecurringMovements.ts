@@ -2,27 +2,27 @@ import { useCallback, useEffect, useState } from 'react';
 
 import type { MovimientoRecurrente } from '@/types/database';
 
-import { listRecurringExpenses } from './service';
+import { listRecurringMovements } from './service';
 
 type State = {
-  expenses: MovimientoRecurrente[];
+  movements: MovimientoRecurrente[];
   loading: boolean;
   error: string | null;
 };
 
-export function useRecurringExpenses() {
-  const [state, setState] = useState<State>({ expenses: [], loading: true, error: null });
+export function useRecurringMovements() {
+  const [state, setState] = useState<State>({ movements: [], loading: true, error: null });
 
   const reload = useCallback(async () => {
     setState((current) => ({ ...current, loading: true, error: null }));
     try {
-      const expenses = await listRecurringExpenses();
-      setState({ expenses, loading: false, error: null });
+      const movements = await listRecurringMovements();
+      setState({ movements, loading: false, error: null });
     } catch (error) {
       setState({
-        expenses: [],
+        movements: [],
         loading: false,
-        error: error instanceof Error ? error.message : 'No se pudieron cargar los gastos recurrentes.',
+        error: error instanceof Error ? error.message : 'No se pudieron cargar los movimientos recurrentes.',
       });
     }
   }, []);
