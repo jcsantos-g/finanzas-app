@@ -14,13 +14,11 @@ Objetivo del curso: evaluar la implementación de IA en el desarrollo. Cada inte
 | 2026-11-25 | 1 | Claude Code | Preparación del equipo y dinero disponible | Crear ramas e Issues; función SQL `dinero_disponible` y tarjeta en el Dashboard | _pendiente de calificar_ | La fusión a `main` la frenó el control de permisos de la herramienta y requirió autorización | _pendiente_ |
 | 2026-11-25 | 1 | Claude Code | Cierre de la base | Actualizar documentación, publicar la versión base en `main` y verificar un clon limpio | _pendiente de calificar_ | _pendiente_ | _pendiente_ |
 | 2026-11-25 | 3 | Copilot | Módulo de gastos recurrentes | Implementar programación, administración y resolución atómica de ocurrencias de gastos recurrentes | _pendiente de calificar_ | La RPC requiere aplicarse y probarse en Supabase | _pendiente_ |
-<<<<<<< HEAD
-| 2026-11-26 | 3 | Copilot | Ingresos recurrentes | Ampliar el módulo y la RPC atómica para manejar ingresos y gastos recurrentes | _pendiente de calificar_ | La nueva migración requiere aplicarse y probarse en Supabase | _pendiente_ |
-=======
+| 2026-11-26 | 3 | Copilot | Ingresos recurrentes | Ampliar el módulo y la RPC atómica para manejar ingresos y gastos recurrentes | _pendiente de calificar_ | La RPC genérica `0004` está aplicada en Supabase; falta repetir las pruebas en teléfono o emulador | _pendiente_ |
 | 2026-11-25 | 2 | ChatGPT | Corrección de tipos de Supabase | Analizar errores de TypeScript en .insert() y .update() y proponer el cambio de cuatro declaraciones interface a type | pendiente de calificar | Se corrigió un error inicial de sintaxis al convertir las declaraciones; posteriormente npm run typecheck finalizó sin errores | pendiente |
 | 2026-11-25 | 1 | Claude Code | Revisión del PR de tipos de Supabase | Revisar el PR #20, reproducir el error y agregar el comentario que explica por qué las filas son `type` | _pendiente de calificar_ | Faltaba el comentario explicativo en `database.ts` | _pendiente_ |
 | 2026-11-25 | 1 | Claude Code | Completar movimientos recurrentes (PR #22) | Revisar el PR, agregar ingresos, generalizar la función SQL, mostrar los errores reales, recargar tras un fallo y separar la pantalla en componentes | _pendiente de calificar_ | La entrega inicial solo cubría gastos y ocultaba los errores de Supabase. Con `0004` aplicada, T-08 a T-12 pasaron en web (ejecutadas por la IA en el navegador); falta probar en teléfono | _pendiente_ |
->>>>>>> cbb80e1aeb902a56a30ae7daa779bb08ee67af77
+| 2026-11-26 | 3 | Copilot | Resolver conflictos de movimientos recurrentes | Integrar las dos versiones del módulo y alinear código, migración y documentación para preparar la rama | _pendiente de calificar_ | Se conservaron los filtros de tipo y la implementación modular; `npm run check` pasó (22 pruebas) | _pendiente_ |
 
 ## Lecciones aprendidas
 
