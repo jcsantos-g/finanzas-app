@@ -114,7 +114,7 @@ export interface Database {
         Args: Record<string, never>;
         Returns: number;
       };
-      /** Confirma u omite una ocurrencia (ingreso o gasto) y avanza su fecha de forma atómica (0005). */
+      /** Confirma u omite una ocurrencia (ingreso o gasto) y avanza su fecha de forma atómica (0004). */
       resolver_movimiento_recurrente: {
         Args: {
           p_accion: 'confirmar' | 'omitir';

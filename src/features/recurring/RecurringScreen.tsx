@@ -22,6 +22,7 @@ import {
 
 type PendingAction = { type: 'skip' | 'delete'; schedule: MovimientoRecurrente } | null;
 type Confirmation = { schedule: MovimientoRecurrente; amount: number | null } | null;
+/** `scheduleId` es null cuando el error viene del formulario. */
 type ActionError = { scheduleId: string | null; message: string } | null;
 
 export function RecurringScreen() {
@@ -46,6 +47,7 @@ export function RecurringScreen() {
   const activeSchedules = schedules.filter((schedule) => schedule.activo);
   const pausedSchedules = schedules.filter((schedule) => !schedule.activo);
 
+  /** Ejecuta una operación y recarga la lista, tanto si funciona como si falla. */
   async function runAction(operation: () => Promise<unknown>, scheduleId: string | null): Promise<boolean> {
     setSaving(true);
     setActionError(null);
@@ -94,6 +96,8 @@ export function RecurringScreen() {
     if (succeeded) setForm(null);
   }
 
+  // La confirmación se cierra aunque falle: la ocurrencia pudo cambiar y no debe
+  // reintentarse sobre la siguiente fecha sin que el usuario la revise.
   async function confirmOccurrence() {
     if (!confirmation) return;
     const { schedule, amount } = confirmation;
@@ -173,6 +177,7 @@ export function RecurringScreen() {
           }}
         />
       ) : null}
+      {/* Si la programación ya no está en la lista, su error se muestra aquí. */}
       {actionError?.scheduleId && !schedules.some((schedule) => schedule.id === actionError.scheduleId) ? (
         <ErrorState message={actionError.message} />
       ) : null}

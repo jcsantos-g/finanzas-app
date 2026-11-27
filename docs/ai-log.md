@@ -19,6 +19,7 @@ Objetivo del curso: evaluar la implementación de IA en el desarrollo. Cada inte
 | 2026-11-25 | 1 | Claude Code | Revisión del PR de tipos de Supabase | Revisar el PR #20, reproducir el error y agregar el comentario que explica por qué las filas son `type` | _pendiente de calificar_ | Faltaba el comentario explicativo en `database.ts` | _pendiente_ |
 | 2026-11-25 | 1 | Claude Code | Completar movimientos recurrentes (PR #22) | Revisar el PR, agregar ingresos, generalizar la función SQL, mostrar los errores reales, recargar tras un fallo y separar la pantalla en componentes | _pendiente de calificar_ | La entrega inicial solo cubría gastos y ocultaba los errores de Supabase. Con `0004` aplicada, T-08 a T-12 pasaron en web (ejecutadas por la IA en el navegador); falta probar en teléfono | _pendiente_ |
 | 2026-11-26 | 3 | Copilot | Resolver conflictos de movimientos recurrentes | Integrar las dos versiones del módulo y alinear código, migración y documentación para preparar la rama | _pendiente de calificar_ | Se conservaron los filtros de tipo y la implementación modular; `npm run check` pasó (22 pruebas) | _pendiente_ |
+| 2026-11-26 | 1 | Claude Code | Ajustes finales del PR #22 | Quitar la migración `0005` (repetía `0004`), recuperar comentarios y corregir la documentación | _pendiente de calificar_ | La rama traía dos migraciones que definían la misma función | _pendiente_ |
 
 ## Lecciones aprendidas
 
