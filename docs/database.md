@@ -14,6 +14,7 @@ La base del equipo ya está creada en Supabase (la configuró el Integrante 1, q
 | `0001_init.sql` | Crea todo el esquema. Ejecutar una sola vez en un proyecto vacío |
 | `0003_dinero_disponible.sql` | Crea la función `dinero_disponible()` (RF-06). Ejecutar después de `0001` |
 | `0002_iconos_a_claves.sql` | **Solo si ya ejecutaste un `0001` antiguo** con emojis: los convierte en claves. Es seguro ejecutarlo de todos modos |
+| `0004_resolver_movimiento_recurrente.sql` | Crea la función transaccional para confirmar u omitir ingresos y gastos recurrentes (RF-05). Ejecutar después de `0001` |
 
 ## Cómo aplicarlo
 
@@ -101,7 +102,8 @@ erDiagram
 | Movimientos sin `on delete cascade` hacia categorías | No se puede borrar una categoría que ya tiene movimientos. Al borrar un usuario se elimina todo en cascada |
 | Totales y saldo **no se guardan** | Se calculan desde `movimientos`, así nunca quedan desactualizados |
 
-## Pendiente (a coordinar con el Integrante 3)
+## Pendiente (a coordinar con el Integrante 1)
 
-- La confirmación/omisión de recurrentes puede implementarse en el cliente (insertar el movimiento y actualizar `proxima_fecha`) o como función SQL (RPC) para que sea atómica. Si se hace en el cliente, la restricción única ya protege contra duplicados, pero un fallo entre los dos pasos dejaría la fecha sin avanzar.
+- `0004_resolver_movimiento_recurrente.sql` ya está aplicada en la base compartida (2026-11-25); confirmar y omitir funcionan en la versión web y en Android.
+- No se puede borrar una programación con movimientos confirmados: `on delete set null` choca con el `check` que exige el vínculo cuando `origen = 'recurrente'` (según el SQL de `0001`; sin probar en la base). La app lo impide y sugiere pausarla.
 - Un presupuesto por categoría debería apuntar solo a categorías de tipo `gasto`; hoy solo lo valida la app.

@@ -12,7 +12,7 @@ Estados: ⬜ pendiente · 🟨 en progreso · ✅ terminado
 | RF-03 | Gestión de gastos | Integrante 2 | `src/features/transactions` | ⬜ |
 | RF-04 | Dashboard (menú de tarjetas + dinero disponible; decisión del equipo) | Integrante 1 | `src/features/dashboard` | ✅ |
 | — | Componentes compartidos y categorías (base para RF-02/03/05/07) | Integrante 1 | `src/components/ui`, `src/features/categories` | ✅ (ver `docs/components.md`) |
-| RF-05 | Movimientos recurrentes | Integrante 3 | `src/features/recurring` | ⬜ |
+| RF-05 | Movimientos recurrentes | Integrante 3 (completado con apoyo del Integrante 1) | `src/features/recurring`, `0004_resolver_movimiento_recurrente.sql` | ✅ T-08 a T-12 y T-17 probados en web y en Android |
 | RF-06 | Dinero disponible | Integrante 1 | `src/features/balance`, `0003_dinero_disponible.sql` | ✅ probado por el Integrante 1 (T-16) |
 | RF-07 | Presupuestos | Integrante 3 | `src/features/budgets` | ⬜ |
 | RF-08 | Reportes básicos | Integrante 4 | `src/features/reports` | ⬜ |
@@ -32,7 +32,7 @@ Estados: ⬜ pendiente · 🟨 en progreso · ✅ terminado
 - [x] Registrarse e iniciar sesión
 - [ ] Registrar, editar, consultar y eliminar ingresos y gastos
 - [x] Dinero disponible correcto (con datos de prueba; repetir al terminar ingresos y gastos)
-- [ ] Programar, confirmar y omitir recurrentes
+- [x] Programar, confirmar y omitir recurrentes
 - [ ] Pendientes no afectan cálculos
 - [ ] Presupuestos y su consumo
 - [ ] Reportes por mes
