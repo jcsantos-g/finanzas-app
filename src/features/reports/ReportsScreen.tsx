@@ -7,8 +7,8 @@ import {
   EmptyState,
   ErrorState,
   Icon,
-  ListItem,
   LoadingState,
+  ProgressBar,
   ScreenContainer,
 } from '@/components/ui';
 import { Palette } from '@/constants/theme';
@@ -115,6 +115,10 @@ function MonthlyReportContent({ year, month }: Period) {
 
   const gastos = report.porCategoria.filter(({ tipo }) => tipo === 'gasto');
   const ingresos = report.porCategoria.filter(({ tipo }) => tipo === 'ingreso');
+  const maxCategoryTotal = report.porCategoria.reduce(
+    (max, category) => Math.max(max, category.total),
+    0,
+  );
   const balanceColor =
     report.balance > 0
       ? Palette.success
@@ -158,8 +162,8 @@ function MonthlyReportContent({ year, month }: Period) {
         <EmptyState message="No hay movimientos registrados en este mes." />
       ) : null}
 
-      <CategorySection tipo="gasto" items={gastos} />
-      <CategorySection tipo="ingreso" items={ingresos} />
+      <CategorySection tipo="gasto" items={gastos} maxValue={maxCategoryTotal} />
+      <CategorySection tipo="ingreso" items={ingresos} maxValue={maxCategoryTotal} />
     </>
   );
 }
@@ -167,9 +171,11 @@ function MonthlyReportContent({ year, month }: Period) {
 function CategorySection({
   tipo,
   items,
+  maxValue,
 }: {
   tipo: TipoMovimiento;
   items: CategoryReport[];
+  maxValue: number;
 }) {
   const title = tipo === 'gasto' ? 'Gastos por categoría' : 'Ingresos por categoría';
   const emptyMessage = tipo === 'gasto' ? 'No hay gastos en este mes.' : 'No hay ingresos en este mes.';
@@ -186,12 +192,17 @@ function CategorySection({
         </ThemedText>
       ) : (
         items.map((item) => (
-          <ListItem
-            key={`${item.tipo}:${item.categoria?.id ?? item.nombreCategoria}`}
-            title={item.nombreCategoria}
-            rightText={formatCurrency(item.total)}
-            rightColor={color}
-          />
+          <Card key={`${item.tipo}:${item.categoria?.id ?? item.nombreCategoria}`} style={styles.categoryCard}>
+            <View style={styles.categoryHeader}>
+              <ThemedText type="smallBold" numberOfLines={1} style={styles.categoryName}>
+                {item.nombreCategoria}
+              </ThemedText>
+              <ThemedText type="smallBold" numberOfLines={1} style={{ color }}>
+                {formatCurrency(item.total)}
+              </ThemedText>
+            </View>
+            <ProgressBar value={item.total} max={maxValue} color={color} />
+          </Card>
         ))
       )}
     </View>
@@ -227,6 +238,18 @@ const styles = StyleSheet.create({
   },
   categorySection: {
     gap: 8,
+  },
+  categoryCard: {
+    gap: 10,
+  },
+  categoryHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  categoryName: {
+    flex: 1,
   },
   sectionTitle: {
     fontWeight: '700',

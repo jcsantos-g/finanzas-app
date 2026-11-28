@@ -9,8 +9,28 @@ npm test          # pruebas unitarias (Jest)
 npm run check     # tipos + linter + pruebas
 ```
 
-Hoy cubren `src/lib/dates.ts` (fechas recurrentes, fin de mes, años bisiestos) y `src/lib/validators.ts`.
+Hoy cubren `src/lib/dates.ts` (fechas recurrentes, fin de mes, años bisiestos), `src/lib/validators.ts` y otros módulos.
 Regla: toda función nueva de cálculo en `lib/` o en un servicio debe llevar su prueba en `__tests__/`.
+
+### Reportes: pruebas unitarias
+
+`src/features/reports/__tests__/service.test.ts` cubre estos diez casos de `getMonthlyReport()`:
+
+1. Suma de ingresos con centavos.
+2. Suma de gastos con centavos.
+3. Balance de ingresos menos gastos con centavos.
+4. Agrupación por categoría y tipo de movimiento.
+5. Inclusión en totales y agrupación como “Sin categoría” cuando falta la categoría.
+6. Separación de ingresos y gastos sin categoría.
+7. Mes sin movimientos: totales en cero y lista de categorías vacía.
+8. Uso del rango real de `monthRange` para febrero bisiesto.
+9. Año o mes inválido produce `RangeError` sin invocar los servicios.
+10. Propagación de errores de `listTransactions` y `listCategories`.
+
+Resultados verificados el 2026-11-28:
+
+- `npm test -- --runInBand src/features/reports/__tests__/service.test.ts`: 1 suite y 10 pruebas aprobadas.
+- `npm run check`: 5 suites y 32 pruebas aprobadas; tipos y linter sin errores.
 
 ## Pruebas funcionales manuales
 
@@ -31,10 +51,21 @@ Ejecutar en un dispositivo real o emulador. Marcar con la fecha y el nombre de q
 | T-11 | Doble confirmación | Tocar "confirmar" dos veces seguidas | Solo existe una transacción | ✅ | Claude Code / 2026-11-25; «Usuario» (sin identificar) / 2026-11-26; Claude Code / 2026-11-26; Juan Carlos Santos (Android) / 2026-11-26 |
 | T-12 | Fin de mes | Recurrente mensual el día 31 | En meses cortos cae en el último día | ✅ | Claude Code / 2026-11-25; «Usuario» (sin identificar) / 2026-11-26; Claude Code / 2026-11-26; Juan Carlos Santos (Android) / 2026-11-26 |
 | T-13 | Presupuesto | Gastar sobre un presupuesto por categoría | Muestra usado, restante y excedido | ⬜ | |
-| T-14 | Reportes | Cambiar de mes | Totales y gráfico corresponden al mes | ⬜ | |
+| T-14 | Reportes | Cambiar de mes | Totales y gráfico corresponden al mes | ⬜ | Integrante 4 (navegador) / 2026-11-28; falta Android o emulador |
 | T-15 | **Aislamiento (RLS)** | Con la cuenta A crear datos; entrar con la cuenta B | B no ve nada de A | ✅ | Juan Carlos Santos / 2026-11-25 |
 | T-16 | Dinero disponible | Registrar un ingreso y un gasto; volver al Dashboard | Muestra ingresos menos gastos; los recurrentes pendientes no cuentan | ✅ | Juan Carlos Santos / 2026-11-25 |
 | T-17 | Ingreso recurrente | Programar y confirmar un ingreso recurrente vencido | Se crea un ingreso real y aumenta el dinero disponible | ✅ | «Usuario» (sin identificar) / 2026-11-26; Claude Code / 2026-11-26; Juan Carlos Santos (Android) / 2026-11-26 |
+
+### Reportes: comprobaciones visuales en navegador
+
+El 2026-11-28, el Integrante 4 comprobó en navegador:
+
+- Presentación de ingresos, gastos e importes.
+- Actualización del reporte al cambiar de mes.
+- Estado vacío en un mes sin movimientos.
+- Apariencia en temas claro y oscuro.
+
+La validación web fue satisfactoria, pero no completa T-14 según el procedimiento de pruebas funcionales: falta ejecutar y registrar el caso en Android o emulador.
 
 ### Movimientos recurrentes
 

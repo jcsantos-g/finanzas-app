@@ -15,7 +15,7 @@ Estados: ⬜ pendiente · 🟨 en progreso · ✅ terminado
 | RF-05 | Movimientos recurrentes | Integrante 3 (completado con apoyo del Integrante 1) | `src/features/recurring`, `0004_resolver_movimiento_recurrente.sql` | ✅ T-08 a T-12 y T-17 probados en web y en Android |
 | RF-06 | Dinero disponible | Integrante 1 | `src/features/balance`, `0003_dinero_disponible.sql` | ✅ probado por el Integrante 1 (T-16) |
 | RF-07 | Presupuestos | Integrante 3 | `src/features/budgets` | ⬜ |
-| RF-08 | Reportes básicos | Integrante 4 | `src/features/reports` | ⬜ |
+| RF-08 | Reportes básicos | Integrante 4 | `src/features/reports` | ✅ Implementado; validado con 10 pruebas unitarias y comprobación satisfactoria en navegador. T-14 en Android/emulador pendiente |
 | RF-09 | Escaneo de tickets con IA (adicional) | Equipo | por definir | ⬜ |
 
 | Regla | Cómo se garantiza | Estado |
@@ -35,6 +35,6 @@ Estados: ⬜ pendiente · 🟨 en progreso · ✅ terminado
 - [x] Programar, confirmar y omitir recurrentes
 - [ ] Pendientes no afectan cálculos
 - [ ] Presupuestos y su consumo
-- [ ] Reportes por mes
+- [x] Reportes por mes
 - [x] Datos aislados entre usuarios (categorías; repetir cuando haya movimientos, presupuestos y recurrentes)
 - [ ] Funciona en un dispositivo móvil
