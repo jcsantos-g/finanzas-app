@@ -23,8 +23,8 @@ Ejecutar en un dispositivo real o emulador. Marcar con la fecha y el nombre de q
 | T-03 | Cerrar sesión | Perfil → Cerrar sesión | Vuelve al login | ✅ | Juan Carlos Santos / 2026-11-25 |
 | T-04 | Ruta protegida | Sin sesión intentar abrir la app | Solo se ven pantallas de autenticación | ✅ | Juan Carlos Santos / 2026-11-25 |
 | T-05 | Monto inválido | Registrar gasto con monto 0 o negativo | Se rechaza con mensaje | ⬜ | |
-| T-06 | Crear gasto | Registrar gasto válido | Aparece en la lista y baja el dinero disponible | ⬜ | |
-| T-07 | Editar / eliminar | Modificar y borrar un movimiento | Los totales se actualizan | ⬜ | |
+| T-06 | Crear gasto | Registrar gasto válido | Aparece en la lista y baja el dinero disponible | ✅ | Integrante 2 / 2026-11-28 (Android) |
+| T-07 | Editar / eliminar | Modificar y borrar un movimiento | Los totales se actualizan | ✅ | Integrante 2 / 2026-11-28 (Android) |
 | T-08 | Recurrente pendiente | Programar un gasto con fecha de hoy | Aparece pendiente y NO afecta el saldo | ✅ | Claude Code / 2026-11-25; «Usuario» (sin identificar) / 2026-11-26; Claude Code / 2026-11-26; Juan Carlos Santos (Android) / 2026-11-26 |
 | T-09 | Confirmar recurrente | Confirmar con otro monto | Se crea el movimiento real y avanza la fecha | ✅ | Claude Code / 2026-11-25; «Usuario» (sin identificar) / 2026-11-26; Claude Code / 2026-11-26; Juan Carlos Santos (Android) / 2026-11-26 |
 | T-10 | Omitir recurrente | Omitir una ocurrencia | No se crea movimiento; avanza la fecha | ✅ | Claude Code / 2026-11-25; «Usuario» (sin identificar) / 2026-11-26; Claude Code / 2026-11-26; Juan Carlos Santos (Android) / 2026-11-26 |
@@ -35,7 +35,7 @@ Ejecutar en un dispositivo real o emulador. Marcar con la fecha y el nombre de q
 | T-15 | **Aislamiento (RLS)** | Con la cuenta A crear datos; entrar con la cuenta B | B no ve nada de A | ✅ | Juan Carlos Santos / 2026-11-25 |
 | T-16 | Dinero disponible | Registrar un ingreso y un gasto; volver al Dashboard | Muestra ingresos menos gastos; los recurrentes pendientes no cuentan | ✅ | Juan Carlos Santos / 2026-11-25 |
 | T-17 | Ingreso recurrente | Programar y confirmar un ingreso recurrente vencido | Se crea un ingreso real y aumenta el dinero disponible | ✅ | «Usuario» (sin identificar) / 2026-11-26; Claude Code / 2026-11-26; Juan Carlos Santos (Android) / 2026-11-26 |
-
+| T-18 | Crear ingreso | Registrar ingreso válido | Aparece en la lista y aumenta el dinero disponible | ✅ | Integrante 2 / 2026-11-28 (Android) |
 ### Movimientos recurrentes
 
 El 2026-11-25 se probó la **versión web** contra Supabase, con `0004_resolver_movimiento_recurrente.sql` aplicada:

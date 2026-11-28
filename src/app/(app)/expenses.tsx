@@ -1,6 +1,5 @@
-import { PlaceholderScreen } from '@/components/ui';
+import { TransactionsScreen } from '@/features/transactions/TransactionsScreen';
 
-// Integrante 2: reemplazar por la pantalla de features/transactions
 export default function ExpensesRoute() {
-  return <PlaceholderScreen title="Gastos" owner="Integrante 2" />;
+  return <TransactionsScreen tipo="gasto" />;
 }
