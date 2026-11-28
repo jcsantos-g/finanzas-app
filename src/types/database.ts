@@ -114,6 +114,18 @@ export interface Database {
         Args: Record<string, never>;
         Returns: number;
       };
+      /** Confirma u omite una ocurrencia (ingreso o gasto) y avanza su fecha de forma atómica (0004). */
+      resolver_movimiento_recurrente: {
+        Args: {
+          p_accion: 'confirmar' | 'omitir';
+          p_fecha_programada: string;
+          p_fecha_real: string | null;
+          p_monto: number | null;
+          p_movimiento_recurrente_id: string;
+          p_proxima_fecha: string;
+        };
+        Returns: string;
+      };
     };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
