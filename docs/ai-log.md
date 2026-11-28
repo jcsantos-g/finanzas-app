@@ -20,7 +20,7 @@ Objetivo del curso: evaluar la implementación de IA en el desarrollo. Cada inte
 | 2026-11-25 | 1 | Claude Code | Completar movimientos recurrentes (PR #22) | Revisar el PR, agregar ingresos, generalizar la función SQL, mostrar los errores reales, recargar tras un fallo y separar la pantalla en componentes | _pendiente de calificar_ | La entrega inicial solo cubría gastos y ocultaba los errores de Supabase. Con `0004` aplicada, T-08 a T-12 pasaron en web (ejecutadas por la IA en el navegador); después el Integrante 1 las probó en un teléfono Android | _pendiente_ |
 | 2026-11-26 | 3 | Copilot | Resolver conflictos de movimientos recurrentes | Integrar las dos versiones del módulo y alinear código, migración y documentación para preparar la rama | _pendiente de calificar_ | Se conservaron los filtros de tipo y la implementación modular; `npm run check` pasó (22 pruebas) | _pendiente_ |
 | 2026-11-26 | 1 | Claude Code | Ajustes finales del PR #22 | Quitar la migración `0005` (repetía `0004`), recuperar comentarios y corregir la documentación | _pendiente de calificar_ | La rama traía dos migraciones que definían la misma función | _pendiente_ |
-
+| 2026-11-28 | 2 | ChatGPT | Módulo de ingresos y gastos | Implementar consulta, registro, edición y eliminación de movimientos manuales; integrar formularios, validaciones, categorías y protección de movimientos automáticos | pendiente de calificar | Se revisó y corrigió la implementación; npm run check pasó y se probaron las operaciones principales manualmente en Android | pendiente |
 ## Lecciones aprendidas
 
 Agrega aquí patrones que funcionaron o fallaron (prompts efectivos, errores recurrentes de la IA, cosas que no conviene delegarle).

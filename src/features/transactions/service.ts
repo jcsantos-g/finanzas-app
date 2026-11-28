@@ -6,6 +6,7 @@ export type TransactionInput = {
   tipo: TipoMovimiento;
   categoria_id: string;
   monto: number;
+  /** Fecha del movimiento en formato YYYY-MM-DD. */
   fecha: string;
   descripcion?: string | null;
 };
@@ -13,7 +14,9 @@ export type TransactionInput = {
 /** Obtiene los movimientos del usuario, ordenados por fecha. */
 export async function listTransactions(params: {
   tipo?: TipoMovimiento;
+  /** Fecha inicial en formato YYYY-MM-DD. */
   desde?: string;
+  /** Fecha final en formato YYYY-MM-DD. */
   hasta?: string;
 } = {}): Promise<Movimiento[]> {
   let query = supabase
@@ -73,11 +76,23 @@ export async function createTransaction(
   return data;
 }
 
+/** Verifica que el movimiento pueda modificarse desde el módulo manual. */
+async function ensureManualTransaction(id: string): Promise<void> {
+  const transaction = await getTransaction(id);
+
+  if (transaction.origen !== 'manual') {
+    throw new Error(
+      'Este movimiento no puede modificarse porque no fue registrado manualmente.',
+    );
+  }
+}
+
 /** Actualiza un movimiento existente. */
 export async function updateTransaction(
   id: string,
   input: TransactionInput,
 ): Promise<Movimiento> {
+  await ensureManualTransaction(id);
   const { data, error } = await supabase
     .from('movimientos')
     .update({
@@ -85,7 +100,9 @@ export async function updateTransaction(
       categoria_id: input.categoria_id,
       monto: input.monto,
       fecha: input.fecha,
-      descripcion: input.descripcion?.trim() || null,
+      ...(input.descripcion !== undefined
+        ? { descripcion: input.descripcion?.trim() || null }
+        : {}),
     })
     .eq('id', id)
     .select('*')
@@ -96,12 +113,19 @@ export async function updateTransaction(
   return data;
 }
 
-/** Elimina un movimiento. */
+/** Elimina un movimiento y comprueba que realmente existía. */
 export async function deleteTransaction(id: string): Promise<void> {
-  const { error } = await supabase
+  await ensureManualTransaction(id);
+
+  const { data, error } = await supabase
     .from('movimientos')
     .delete()
-    .eq('id', id);
+    .eq('id', id)
+    .select('id');
 
   if (error) throw error;
+
+  if (!data || data.length === 0) {
+    throw new Error('No se encontró el movimiento o no tienes permiso para eliminarlo.');
+  }
 }

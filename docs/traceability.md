@@ -8,8 +8,8 @@ Estados: ⬜ pendiente · 🟨 en progreso · ✅ terminado
 | Requerimiento | Descripción | Responsable | Ubicación | Estado |
 |---|---|---|---|---|
 | RF-01 | Autenticación (registro, login, logout, recuperar contraseña) | Integrante 1 | `src/features/auth`, `src/app/(auth)` | 🟨 pantallas base; falta pantalla para definir nueva contraseña |
-| RF-02 | Gestión de ingresos | Integrante 2 | `src/features/transactions` | ⬜ |
-| RF-03 | Gestión de gastos | Integrante 2 | `src/features/transactions` | ⬜ |
+| RF-02 | Gestión de ingresos | Integrante 2 | `src/features/transactions` |✅  terminado |
+| RF-03 | Gestión de gastos | Integrante 2 | `src/features/transactions` | ✅ terminado |
 | RF-04 | Dashboard (menú de tarjetas + dinero disponible; decisión del equipo) | Integrante 1 | `src/features/dashboard` | ✅ |
 | — | Componentes compartidos y categorías (base para RF-02/03/05/07) | Integrante 1 | `src/components/ui`, `src/features/categories` | ✅ (ver `docs/components.md`) |
 | RF-05 | Movimientos recurrentes | Integrante 3 (completado con apoyo del Integrante 1) | `src/features/recurring`, `0004_resolver_movimiento_recurrente.sql` | ✅ T-08 a T-12 y T-17 probados en web y en Android |
@@ -30,7 +30,7 @@ Estados: ⬜ pendiente · 🟨 en progreso · ✅ terminado
 ## Criterios de finalización del MVP (sección 13 del documento)
 
 - [x] Registrarse e iniciar sesión
-- [ ] Registrar, editar, consultar y eliminar ingresos y gastos
+- [x] Registrar, editar, consultar y eliminar ingresos y gastos
 - [x] Dinero disponible correcto (con datos de prueba; repetir al terminar ingresos y gastos)
 - [x] Programar, confirmar y omitir recurrentes
 - [ ] Pendientes no afectan cálculos
